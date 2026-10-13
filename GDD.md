@@ -218,13 +218,19 @@ Figura 6\. Menú principal: Con boton de jugar y ajustes.
 Pantalla de juego (HUD)  
 <img src="img/Interfaz.jpg" alt="HUD" width="400">
 
-Figura 7\. Pantalla de juego: Rondas y huecos para los power-ups.  
+Figura 7\. Pantalla de juego: Rondas y huecos para los power-ups. 
+
+Ayuda y Creditos 
+<img src="img/Ayuda.jpg" alt="HUD" width="400">
+<img src="img/Creditos.jpg" alt="HUD" width="400">
+
+Figura 8\. Ayuda (izquierda) y Creditos (derecha).
 
 Ajustes y fin de partida  
 <img src="img/Ajustes.jpg" alt="HUD" width="400">
 <img src="img/FinDePartida.jpg" alt="HUD" width="400">
 
-Figura 8\. Pantalla de ajustes (izquierda) y fin de partida (derecha).
+Figura 9\. Pantalla de ajustes (izquierda) y fin de partida (derecha).
 
 ### 7.2. Diagrama de flujo
 
@@ -249,7 +255,7 @@ flowchart TD
     G --> |Volver al menú| B
 ```
 
-Figura 9\. Diagrama de flujo entre pantallas.  
+Figura 10\. Diagrama de flujo entre pantallas.  
 
 
 ## 8\. Comunicación y marketing
