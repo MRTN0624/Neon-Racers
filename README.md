@@ -46,7 +46,7 @@ Apartados principales:
 
 | Fase | Contenido | Estado |
 | :--- | :--- | :--- |
-| Fase 1 | Equipo, temática y GDD | ✅ Entregada (tag `fase-1`) |
+| Fase 1 | Equipo, temática y GDD | ✅ Entregada ([tag fase-1](https://github.com/MRTN0624/Neon-Racers/tree/fase-1)) |
 | Fase 2 | Juego en local | ⏳ Pendiente |
 | Fase 3 | API REST | ⏳ Pendiente |
 | Fase 4 | WebSockets | ⏳ Pendiente |
