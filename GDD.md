@@ -213,24 +213,24 @@ Los bocetos de los personajes se encuentran en el apartado [4.2](#42-personajes)
 Menú principal  
 
 <img src="img/Menu_Principal.jpg" alt="MenuPrincipal" width="400">
-Figura 6\. Menú principal: Con boton de jugar y ajustes.  
+Figura 6. Menú principal: Con boton de jugar y ajustes.  
 
 Pantalla de juego (HUD)  
 
 <img src="img/Interfaz.jpg" alt="HUD" width="400">
-Figura 7\. Pantalla de juego: Rondas y huecos para los power-ups. 
+Figura 7. Pantalla de juego: Rondas y huecos para los power-ups. 
 
 Ayuda y Creditos 
 
 <img src="img/Ayuda.jpg" alt="HUD" width="400">
 <img src="img/Creditos.jpg" alt="HUD" width="400">
-Figura 8\. Ayuda (izquierda) y Creditos (derecha).
+Figura 8. Ayuda (izquierda) y Creditos (derecha).
 
 Ajustes y fin de partida
 
 <img src="img/Ajustes.jpg" alt="HUD" width="400">
 <img src="img/FinDePartida.jpg" alt="HUD" width="400">
-Figura 9\. Pantalla de ajustes (izquierda) y fin de partida (derecha).
+Figura 9. Pantalla de ajustes (izquierda) y fin de partida (derecha).
 
 ### 7.2. Diagrama de flujo
 
@@ -255,7 +255,7 @@ flowchart TD
     G --> |Volver al menú| B
 ```
 
-Figura 10\. Diagrama de flujo entre pantallas.  
+Figura 10. Diagrama de flujo entre pantallas.  
 
 
 ## 8\. Comunicación y marketing
