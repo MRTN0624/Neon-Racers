@@ -2,7 +2,7 @@
   <img src="img/Neon_Racers_Logo_Transparent.png" alt="Logotipo de Neon Racers" width="400">
 </p>
 
-# Neon Racers — Nombre del juego
+# Neon Racers
 
 **Juegos en Red · Grado en Diseño y Desarrollo de Videojuegos · URJC · Curso 2026/27**<br>
 **Grupo J**
