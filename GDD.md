@@ -69,7 +69,7 @@ El objetivo de cada jugador es crear una estela con su moto para conseguir que e
 
 #### 3.3.1. Mecánicas principales
 
-* Movimiento del jugador: el personaje jugable tiene un movimiento fijo en una dirección. El jugador puede cambiar la dirección pulsando WASD o las flechas direccionales (un jugador usa WASD y el otro las flechas direccionales).   
+* Movimiento del jugador: El personaje jugable tiene un movimiento fijo en una dirección. El jugador puede cambiar la dirección pulsando WASD o las flechas direccionales (un jugador usa WASD y el otro las flechas direccionales) en modo local.
 * Traza: El jugador crea una estela detrás suya que al contacto con otro jugador hace que este pierda.  
 * Power-ups: Cada x segundos (varía según el objeto) aparece un objeto recolectable en una posición aleatoria del mapa. Cuando un jugador toca un objeto, obtiene un power-up que se activa automáticamente
 
@@ -94,7 +94,7 @@ El juego contabiliza el número de partidas que ha ganado cada jugador. Este con
 
 ### 3.5. Escenario
 
-El escenario representa un. Se compone de 3 zonas:
+El escenario representa una arena de combate futurista con vista cenital, inspirada en la estética de Tron. Está formado por una cuadrícula sobre un fondo negro, rodeada de barreras luminosas que delimitan la zona de juego. Se compone de 3 zonas:
 
 1. Zona Azul: El fondo es negro con bordes azules.
 2. Zona Roja: El fondo es negro con bordes rojos.  
