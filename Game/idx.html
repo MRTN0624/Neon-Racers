@@ -1,1 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Racers</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+    <!-- Fondo decorativo (Rejilla Synthwave) -->
+    <div class="bg-grid"></div>
+    <div class="bg-sun"></div>
+
+    <div class="arcade-wrapper">
+        
+        <!-- CABECERA: Logo e indicadores retro -->
+        <header class="arcade-header">
+            <div class="coin-slot">INSERT COIN [1P]</div>
+            <h1 class="neon-title">NEON RACERS</h1>
+            <div class="arcade-status">HIGH SCORE: <span id="top-score">99990</span></div>
+        </header>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="arcade-main">
+
+            <!-- PANTALLA DE JUEGO (CANVAS + EFECTO CRT) -->
+            <section class="screen-container">
+                <div class="crt-overlay"></div>
+                <canvas id="gameCanvas" width="800" height="600">
+                    Tu navegador no soporta Canvas HTML5.
+                </canvas>
+            </section>
+
+            <!-- PANEL LATERAL: Leaderboard y Controles -->
+            <aside class="arcade-sidebar">
+                
+                <!-- Tabla de Marcadores -->
+                <div class="panel leaderboard-panel">
+                    <h2>TOP RACERS</h2>
+                    <ol class="score-list">
+                        <li><span>1. ACE</span> <span>99990</span></li>
+                        <li><span>2. TRON</span> <span>85400</span></li>
+                        <li><span>3. REX</span> <span>72100</span></li>
+                        <li><span>4. NEO</span> <span>60000</span></li>
+                        <li><span>5. FLY</span> <span>45000</span></li>
+                    </ol>
+                </div>
+
+                <!-- Guía de Controles -->
+                <div class="panel controls-panel">
+                    <h2>CONTROLES</h2>
+                    <ul class="controls-list">
+                        <li><kbd>W</kbd> / <kbd>↑</kbd> Acelerar</li>
+                        <li>
