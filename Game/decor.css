@@ -1,16 +1,7 @@
 /* ==========================================
    NEON RACERS - ESTILOS GENERALES Y DECORADO
    ========================================== */
-.neon-title{
-   /* Posicionamiento absoluto para centrarlo respecto a toda la pantalla */
-    position: absolute;
 
-    /*Para dejarlo justo en el centro*/
-    left: 50%;
-    transform: translateX(-50%);
-    
-    text-align: center;
-}
 
 .arcade-footer{
 
@@ -25,8 +16,23 @@
  transform: translateX(-50%);
  text-align: center;
 }
+/* IMAGEN LOGO * /
+/* Mantener el contenedor centrado */
+.neon-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-
+/* Controlar el tamaño del logotipo */
+.logo-img {
+    max-height: 80px; /* Ajusta la altura según lo grande que quieras que se vea */
+    width: auto;      /* Mantiene la proporción original de la imagen */
+    filter: drop-shadow(0 0 10px var(--neon-pink)); /* Opcional: le da un halo de neón a la imagen */
+}
 
 /* Variables de color para los neones */
 :root {
