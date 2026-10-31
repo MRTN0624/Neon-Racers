@@ -4,13 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neon Racers</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="decor.css">
 </head>
 <body>
 
-    <!-- Fondo decorativo (Rejilla Synthwave) -->
-    <div class="bg-grid"></div>
-    <div class="bg-sun"></div>
+    <!-- Fondo decorativo (Rejilla Synthwave y Sol) -->
+<div class="bg-grid"></div>
+<div class="bg-sun"></div>
+
+<!-- MARCOS DECORATIVOS HUD (NUEVO) -->
+<div class="hud-frame">
+    <div class="hud-corner top-left"></div>
+    <div class="hud-corner top-right"></div>
+    <div class="hud-corner bottom-left"></div>
+    <div class="hud-corner bottom-right"></div>
+</div>
 
     <div class="arcade-wrapper">
         
@@ -18,7 +26,7 @@
         <header class="arcade-header">
             <div class="coin-slot">INSERT COIN [1P]</div>
             <h1 class="neon-title">NEON RACERS</h1>
-            <div class="arcade-status">HIGH SCORE: <span id="top-score">99990</span></div>
+            <!--<div class="arcade-status">HIGH SCORE: <span id="top-score">99990</span></div>
         </header>
 
         <!-- CONTENIDO PRINCIPAL -->
@@ -36,7 +44,7 @@
             <aside class="arcade-sidebar">
                 
                 <!-- Tabla de Marcadores -->
-                <div class="panel leaderboard-panel">
+                <!--<div class="panel leaderboard-panel">
                     <h2>TOP RACERS</h2>
                     <ol class="score-list">
                         <li><span>1. ACE</span> <span>99990</span></li>
@@ -48,8 +56,36 @@
                 </div>
 
                 <!-- Guía de Controles -->
-                <div class="panel controls-panel">
+                <div class="controls-panel">
                     <h2>CONTROLES</h2>
-                    <ul class="controls-list">
+                    <ul class="controls-list", style = "list-style: none;" >
                         <li><kbd>W</kbd> / <kbd>↑</kbd> Acelerar</li>
-                        <li>
+                        <li><kbd>S</kbd> / <kbd>↓</kbd> Freno / Marcha atrás</li>
+                        <li><kbd>A</kbd> <kbd>D</kbd> / <kbd>←</kbd> <kbd>→</kbd> Girar</li>
+                        <li><kbd>SPACE</kbd> Nitro / Turbo</li>
+                    </ul>
+                </div>
+
+                <!-- Control de Sonido -->
+                <!--<div class="panel audio-panel">
+                    <button id="btn-audio" class="neon-btn">
+                        <span class="icon">🔊</span> AUDIO: ON
+                    </button>
+                </div>
+
+            </aside>
+
+        </main>
+
+        <!-- PIE DE PÁGINA: Créditos e info del grupo -->
+        <footer class="arcade-footer">
+            <p>© 2026 RED MAPLE GAMES | ALL RIGHTS RESERVED</p>
+            <p class="blink-text">PRESS START TO PLAY</p>
+        </footer>
+
+    </div>
+
+    <!-- Script principal del juego -->
+    <!-- <script src="main.js"></script>--> 
+</body>
+</html>

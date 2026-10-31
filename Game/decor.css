@@ -1,0 +1,181 @@
+/* ==========================================
+   NEON RACERS - ESTILOS GENERALES Y DECORADO
+   ========================================== */
+.neon-title{
+   /* Posicionamiento absoluto para centrarlo respecto a toda la pantalla */
+    position: absolute;
+
+    /*Para dejarlo justo en el centro*/
+    left: 50%;
+    transform: translateX(-50%);
+    
+    text-align: center;
+}
+
+.arcade-footer{
+
+    position: absolute;
+    top: 850px;
+    left: 4%;
+    text-align: left;
+}
+.controls-panel{
+ position: absolute;
+ left:50%;
+ transform: translateX(-50%);
+ text-align: center;
+}
+
+
+
+/* Variables de color para los neones */
+:root {
+    --bg-black: #000000;
+    --neon-cyan: #00f6ff;
+    --neon-pink: #ff007f;
+    --neon-yellow: #ffe600;
+    --neon-purple: #9d00ff;
+    --text-white: #ffffff;
+}
+/* Por si no entendeis es basicamente una clase que agrupa todo el contenido de la web
+   y estoy definiendo variables de colores para que las pueda usar constantemente
+   La pagina sin necesidad de volverlos a definir */
+
+/* Reset de márgenes y fondo Absolute Black */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-black);
+    color: var(--text-white);
+    font-family: 'Courier New', Courier, monospace; /* Fuente retro por defecto */
+    overflow-x: hidden;
+}
+
+/* ==========================================
+   FONDO SYNTHWAVE: REJILLA Y SOL DE NEÓN
+   ========================================== */
+
+/* Contenedor fijo para que la rejilla se quede de fondo estática */
+.bg-grid {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60vh; /* Ocupa el 60% inferior de la pantalla */
+    
+    /* Creamos la cuadrícula usando gradientes lineales */
+    background-image: 
+        linear-gradient(to right, rgba(0, 246, 255, 0.4) 2px, transparent 2px),
+        linear-gradient(to bottom, rgba(0, 246, 255, 0.4) 2px, transparent 2px);
+    background-size: 50px 50px;
+    
+    /* Aplicamos la perspectiva 3D (Tumbamos la rejilla) */
+    transform: perspective(300px) rotateX(75deg);
+    transform-origin: center bottom;
+    
+    /* Sombra de neón para que la rejilla parezca brillar */
+    box-shadow: 0 0 15px var(--neon-cyan);
+    
+    pointer-events: none; /* Permite hacer clic a través de ella */
+    z-index: 1; /* Colocada justo sobre el fondo */
+}
+
+/* Sol de neón en el horizonte */
+.bg-sun {
+    position: fixed;
+    bottom: 35vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: linear-gradient(to bottom, var(--neon-yellow), var(--neon-pink));
+    box-shadow: 0 0 40px var(--neon-pink);
+    pointer-events: none;
+    z-index: 0; /* Detrás de la rejilla pero sobre el body */
+}
+
+/* Capa principal del juego para asegurarse de que esté por encima del fondo */
+.arcade-wrapper {
+    position: relative;
+    z-index: 2;
+}
+
+/* ==========================================
+   DECORACIÓN HUD / ESQUINAS ARCADE
+   ========================================== */
+
+/* Contenedor que cubre toda la pantalla sin bloquear clics */
+.hud-frame {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 3; /* Por encima del juego para dar efecto de marco */
+}
+
+/* Esquinas base */
+.hud-corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-color: var(--neon-cyan);
+    border-style: solid;
+    border-width: 0;
+    filter: drop-shadow(0 0 8px var(--neon-cyan));
+    opacity: 0.8;
+}
+
+/* Esquina Superior Izquierda */
+.hud-corner.top-left {
+    top: 20px;
+    left: 20px;
+    border-top-width: 3px;
+    border-left-width: 3px;
+}
+
+/* Esquina Superior Derecha */
+.hud-corner.top-right {
+    top: 20px;
+    right: 20px;
+    border-top-width: 3px;
+    border-right-width: 3px;
+}
+
+/* Esquina Inferior Izquierda */
+.hud-corner.bottom-left {
+    bottom: 20px;
+    left: 20px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+}
+
+/* Esquina Inferior Derecha */
+.hud-corner.bottom-right {
+    bottom: 20px;
+    right: 20px;
+    border-bottom-width: 3px;
+    border-right-width: 3px;
+}
+
+/* Detalle decorativo: pequeña cruz o marca interior en cada esquina */
+.hud-corner::after {
+    content: '+';
+    position: absolute;
+    font-size: 14px;
+    color: var(--neon-pink);
+    text-shadow: 0 0 5px var(--neon-pink);
+}
+
+.top-left::after     { top: 5px; left: 5px; }
+.top-right::after    { top: 5px; right: 5px; }
+.bottom-left::after  { bottom: 5px; left: 5px; }
+.bottom-right::after { bottom: 5px; right: 5px; }
