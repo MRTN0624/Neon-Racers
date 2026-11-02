@@ -12,6 +12,7 @@
 }
 .controls-panel{
  position: absolute;
+ top:4200%;
  left:50%;
  transform: translateX(-50%);
  text-align: center;
@@ -185,3 +186,24 @@ html, body {
 .top-right::after    { top: 5px; right: 5px; }
 .bottom-left::after  { bottom: 5px; left: 5px; }
 .bottom-right::after { bottom: 5px; right: 5px; }
+
+
+/* ==========================================
+   CANVAS DE JUEGO
+   ========================================== */
+
+#gameCanvas {
+  position: absolute;
+  top:2500%;                  /* Baja el centro al 50% de la pantalla */
+  left: 50%;                 /* Mueve el centro al 50% de la pantalla */
+  transform: translate(-50%, -50%); /* Ajusta el eje exacto del canvas al centro */
+  
+  z-index: 2;                /* Encima del fondo y debajo del HUD */
+  
+  border: 2px solid #00f3ff;
+  border-radius: 6px;
+  box-shadow: 
+    0 0 5px #00f3ff,
+    0 0 15px #00f3ff,
+    0 0 30px #00f3ff;
+}
