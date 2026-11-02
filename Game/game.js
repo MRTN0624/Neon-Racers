@@ -36,7 +36,8 @@ function create() {
     this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
     this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
     this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-//Permite registrar cada tecla de forma individual, para luego usarlas directamente
+    this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    //Permite registrar cada tecla de forma individual, para luego usarlas directamente
 
 //Estela de movimiento del jugador
 this.player1.trailGraphics = this.add.graphics() //Objeto gráfico que se usará para dibujar la estela del jugador
@@ -44,7 +45,8 @@ this.player1.trailGraphics.setDepth(0); //Por debajo del jugador
 this.player1.trail = []; //Basicamente una cola que guardara los puntos (coordenadas) por los
 //que pasa el jugador y cuando supere cierto numero, se borra el primero que se insertó y asi constantemente
 //this.player1.trailGraphics.lineStyle(10, 0xFF0000, 1); //Establecemos el estilo de la línea de la estela (grosor, color y opacidad)
-
+this.player1.speed = 300; //Velocidad de movimiento del jugador
+this.player1.cooldown = 5; //Tiempo de espera para el boost nitro
 }
 
 function update(time, delta) {
@@ -57,7 +59,8 @@ function update(time, delta) {
 
     //  Limpiamos el gráfico anterior
     this.player1.trailGraphics.clear();
-    this.player1.trailGraphics.lineStyle(10, 0xFF0000, 1); 
+    this.player1.trailGraphics.lineStyle(10, 0x990000, 0.3); 
+    
     if(this.player1.trail.length > 1){ //Ya ha avanzado mas de un punto
         this.player1.trailGraphics.beginPath();
         this.player1.trailGraphics.moveTo(this.player1.trail[0].x, this.player1.trail[0].y);
@@ -68,6 +71,16 @@ function update(time, delta) {
         
         this.player1.trailGraphics.strokePath();
     }
+
+    //Segunda capa: estela más brillante.
+    this.player1.trailGraphics.lineStyle(5, 0xFF3333, 0.9);
+    this.player1.trailGraphics.beginPath();
+    this.player1.trailGraphics.moveTo(this.player1.trail[0].x, this.player1.trail[0].y);
+    for (let i = 1; i < this.player1.trail.length; i++) {
+        this.player1.trailGraphics.lineTo(this.player1.trail[i].x, this.player1.trail[i].y);
+    }
+    
+    this.player1.trailGraphics.strokePath();
         //-------------------------------------------------------------------------------------------------
 
     //El uso del angle funciona correctamente, ya que lo rotamos respecto al punto de origen
@@ -102,24 +115,43 @@ function update(time, delta) {
         console.log('Jugador moviéndose hacia abajo');
     }
 
+    if (this.spaceKey.isDown && this.player1.cooldown > 0) {
+        console.log('Jugador hace boost nitro');
+        this.player1.speed = 600; // Aumenta la velocidad del jugador al presionar la barra espaciadora
+        this.player1.cooldown -=  1*delta/1000; // Disminuye el tiempo de espera para el boost nitro   
+    }
+    else {
+    this.player1.speed = 300 ; // Vuelve a la velocidad normal cuando se suelta la barra espaciadora
+    
+if(!this.spaceKey.isDown){
+ this.player1.cooldown += 1*delta/1000; // Aumenta el tiempo de espera para el boost nitro
+    
+}
+   
+}   
+if(this.player1.cooldown > 5) this.player1.cooldown = 5; // Limita el tiempo de espera máximo a 5 segundos
+if (this.player1.cooldown < 0) {
+    this.player1.cooldown = 0;
+}
+
     switch(this.player1.direction){
 
 case 'up':
-    this.player1.y -= 5;
+    this.player1.y -= this.player1.speed*delta/1000; // Ajuste de velocidad según el tiempo delta
 
 
     break;      
 
 case 'down':
-    this.player1.y += 5;
+    this.player1.y += this.player1.speed*delta/1000;
     break;
         
 case 'left':
-    this.player1.x -= 5;
+    this.player1.x -= this.player1.speed*delta/1000    ;
     break;
 
 case 'right':
-    this.player1.x += 5;
+    this.player1.x += this.player1.speed*delta/1000;
     break;
 
 
