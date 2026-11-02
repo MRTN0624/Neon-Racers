@@ -12,155 +12,167 @@ function preload() {
     //----------------------------------------
     //Personajes------------------------------
     this.load.image('player1', '../img/Characters/Char1.png');
-
+    this.load.image('player2', '../img/Characters/Char2.png');
     //----------------------------------------
 }
 
+function createPlayer(scene, x, y, key, startAngle, controls, trailColor, trailGlowColor) {
+    const player = scene.add.image(x, y, key);
+    player.setScale(0.05);
+    player.direction = 'none';
+    player.angle = startAngle;
+    player.setDepth(1);
+
+    // Propiedades del jugador
+    player.speed = 300;
+    player.cooldown = 5;
+    player.maxCooldown = 5;
+    player.controls = controls; // Mapeo de controles pasados como objeto
+
+    // Estela de movimiento
+    player.trailGraphics = scene.add.graphics();
+    player.trailGraphics.setDepth(0);
+    player.trail = [];
+    player.trailColor = trailColor;         // Color capa base
+    player.trailGlowColor = trailGlowColor; // Color capa brillo
+
+    return player;
+}
+
+
+//Codigo refactorizado, ver atras para entenderlo mejor en flujo versiones
 function create() {
     // Inicialización y pintado inicial de objetos
     this.map = this.add.image(400, 300, 'map1'); // Agrega la imagen del mapa al centro del canvas
     this.map.setScale(0.45, 0.33); 
     this.map.setDepth(-1); // Establece la profundidad del mapa para que esté detrás del jugador
     
-    // Guardamos la referencia en this.player para poder moverlo en update()
-    this.player1 = this.add.image(115, 520, 'player1'); 
-    this.player1.setScale(0.05); // Escala del jugador
-    this.player1.direction = 'none'; // Inicializamos la dirección por defecto
-    this.player1.angle = 0;
-    this.player1.setDepth(1);
+   const cursors = this.input.keyboard.createCursorKeys(); //Para jugador 2
+    const controlsPlayer2 = {
     // Captura de las teclas de dirección
-    this.cursors = this.input.keyboard.createCursorKeys();
+    up: cursors.up,
+    down: cursors.down,
+    left: cursors.left,
+    right: cursors.right
+};
 
+    const controlsPlayer1 = {
     // Registramos las teclas A, D, W, S en create()
-    this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-    this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-    this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-    this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-    this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    //Permite registrar cada tecla de forma individual, para luego usarlas directamente
-
-//Estela de movimiento del jugador
-this.player1.trailGraphics = this.add.graphics() //Objeto gráfico que se usará para dibujar la estela del jugador
-this.player1.trailGraphics.setDepth(0); //Por debajo del jugador
-this.player1.trail = []; //Basicamente una cola que guardara los puntos (coordenadas) por los
-//que pasa el jugador y cuando supere cierto numero, se borra el primero que se insertó y asi constantemente
-//this.player1.trailGraphics.lineStyle(10, 0xFF0000, 1); //Establecemos el estilo de la línea de la estela (grosor, color y opacidad)
-this.player1.speed = 300; //Velocidad de movimiento del jugador
-this.player1.cooldown = 5; //Tiempo de espera para el boost nitro
+    up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
+down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
+right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
+nitro: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+//Permite registrar cada tecla de forma individual, para luego usarlas directamente
+    };
+this.players = [
+    createPlayer(this, 115, 520, 'player1', 0, controlsPlayer1, 0x990000, 0xFF3333),
+    createPlayer(this, 685, 80, 'player2', 180, controlsPlayer2, 0x000099, 0x3333FF)
+];
 }
 
 function update(time, delta) {
-    // Bucle del juego ejecutado continuamente
-
-    this.player1.trail.push({ x: this.player1.x, y: this.player1.y }); // Guardamos la posición actual del jugador en la estela
-    if(this.player1.trail.length > 50){
-        this.player1.trail.shift(); // Eliminamos el primer punto de la estela si supera los 50 puntos
-    }
-
-    //  Limpiamos el gráfico anterior
-    this.player1.trailGraphics.clear();
-    this.player1.trailGraphics.lineStyle(10, 0x990000, 0.3); 
-    
-    if(this.player1.trail.length > 1){ //Ya ha avanzado mas de un punto
-        this.player1.trailGraphics.beginPath();
-        this.player1.trailGraphics.moveTo(this.player1.trail[0].x, this.player1.trail[0].y);
-
-        for (let i = 1; i < this.player1.trail.length; i++) {
-            this.player1.trailGraphics.lineTo(this.player1.trail[i].x, this.player1.trail[i].y);
-        }
-        
-        this.player1.trailGraphics.strokePath();
-    }
-
-    //Segunda capa: estela más brillante.
-    this.player1.trailGraphics.lineStyle(5, 0xFF3333, 0.9);
-    this.player1.trailGraphics.beginPath();
-    this.player1.trailGraphics.moveTo(this.player1.trail[0].x, this.player1.trail[0].y);
-    for (let i = 1; i < this.player1.trail.length; i++) {
-        this.player1.trailGraphics.lineTo(this.player1.trail[i].x, this.player1.trail[i].y);
-    }
-    
-    this.player1.trailGraphics.strokePath();
-        //-------------------------------------------------------------------------------------------------
-
-    //El uso del angle funciona correctamente, ya que lo rotamos respecto al punto de origen
-    // Mover a la izquierda (Flecha Izquierda o Tecla A)
-    if (this.cursors.left.isDown || this.keyA.isDown) {
-        this.player1.angle = -90; // Rotar el jugador hacia la izquierda
-        this.player1.direction = 'left'; // Guardar la dirección del jugador por si la necesitaramos en adelante
-       
-        console.log('Jugador moviéndose a la izquierda');
-      
-    }
-    // Mover a la derecha (Flecha Derecha o Tecla D)
-    else if (this.cursors.right.isDown || this.keyD.isDown) {
-        this.player1.angle = 90; // Rotar el jugador hacia la derecha
-        this.player1.direction = 'right'; // Guardar la dirección del jugador por si la necesitaramos en adelante
-        
-        console.log('Jugador moviéndose a la derecha');
-    }
-
-    // Mover hacia arriba (Flecha Arriba o Tecla W)
-    if (this.cursors.up.isDown || this.keyW.isDown) {
-        this.player1.angle = 0; // Rotar el jugador hacia arriba
-        this.player1.direction = 'up';
-        
-        console.log('Jugador moviéndose hacia arriba');
-    }
-    // Mover hacia abajo (Flecha Abajo o Tecla S)
-    else if (this.cursors.down.isDown || this.keyS.isDown) {
-        this.player1.angle = 180; // Rotar el jugador hacia abajo (180º)
-        this.player1.direction = 'down';
-      
-        console.log('Jugador moviéndose hacia abajo');
-    }
-
-    if (this.spaceKey.isDown && this.player1.cooldown > 0) {
-        console.log('Jugador hace boost nitro');
-        this.player1.speed = 600; // Aumenta la velocidad del jugador al presionar la barra espaciadora
-        this.player1.cooldown -=  1*delta/1000; // Disminuye el tiempo de espera para el boost nitro   
-    }
-    else {
-    this.player1.speed = 300 ; // Vuelve a la velocidad normal cuando se suelta la barra espaciadora
-    
-if(!this.spaceKey.isDown){
- this.player1.cooldown += 1*delta/1000; // Aumenta el tiempo de espera para el boost nitro
-    
-}
-   
-}   
-if(this.player1.cooldown > 5) this.player1.cooldown = 5; // Limita el tiempo de espera máximo a 5 segundos
-if (this.player1.cooldown < 0) {
-    this.player1.cooldown = 0;
+    // Recorremos todos los jugadores registrados
+    this.players.forEach(player => {  //Es una funcion flecha que recorre el array de jugadores y actualiza cada uno de ellos
+        updatePlayer(player, delta);
+    });
 }
 
-    switch(this.player1.direction){
+function updatePlayer(player, delta) {
+    const deltaSec = delta / 1000;
 
-case 'up':
-    this.player1.y -= this.player1.speed*delta/1000; // Ajuste de velocidad según el tiempo delta
+    // --- 1. LÓGICA DE ESTELA (TRAIL) ---
+    player.trail.push({ x: player.x, y: player.y });
+    if (player.trail.length > 50) {
+        player.trail.shift();
+    }
 
+    player.trailGraphics.clear();
+    player.trailGraphics.lineStyle(10, player.trailColor, 0.3);
+    
+    if (player.trail.length > 1) {
+    // Primera capa: color base
+    player.trailGraphics.lineStyle(10, player.trailColor, 0.3);
+    player.trailGraphics.beginPath();
+    player.trailGraphics.moveTo(player.trail[0].x, player.trail[0].y);
 
-    break;      
+    for (let i = 1; i < player.trail.length; i++) {
+        player.trailGraphics.lineTo(player.trail[i].x, player.trail[i].y);
+    }
 
-case 'down':
-    this.player1.y += this.player1.speed*delta/1000;
-    break;
-        
-case 'left':
-    this.player1.x -= this.player1.speed*delta/1000    ;
-    break;
+    player.trailGraphics.strokePath();
 
-case 'right':
-    this.player1.x += this.player1.speed*delta/1000;
-    break;
+    // Segunda capa: brillo
+    player.trailGraphics.lineStyle(5, player.trailGlowColor, 0.9);
+    player.trailGraphics.beginPath();
+    player.trailGraphics.moveTo(player.trail[0].x, player.trail[0].y);
 
+    for (let i = 1; i < player.trail.length; i++) {
+        player.trailGraphics.lineTo(player.trail[i].x, player.trail[i].y);
+    }
 
+    player.trailGraphics.strokePath();
+}
+
+    // --- 2. ENTRADA DE CONTROLES (DIRECCIÓN) ---
+    if (player.controls.left.isDown) {
+        player.angle = -90;
+        player.direction = 'left';
+        console.log (player, "desplazandose a la izquierda");
+    } else if (player.controls.right.isDown) {
+        player.angle = 90;
+        player.direction = 'right';
+        console.log (player, "desplazandose a la derecha");
+    }
+
+    if (player.controls.up.isDown) {
+        player.angle = 0;
+        player.direction = 'up';
+        console.log (player, "desplazandose hacia arriba");
+    } else if (player.controls.down.isDown) {
+        player.angle = 180;
+        player.direction = 'down';
+        console.log (player, "desplazandose hacia abajo");
+    }
+
+    // --- 3. LÓGICA DE NITRO / COOLDOWN ---
+if (player.controls.nitro && player.controls.nitro.isDown && player.cooldown > 0) {
+    player.speed = 600;
+    player.cooldown -= deltaSec;
+} else {
+    player.speed = 300;
+
+    if (player.controls.nitro && !player.controls.nitro.isDown) {
+        player.cooldown += deltaSec;
+    }
+}
+    
+
+    // Mantener cooldown en los rangos [0, maxCooldown]
+    player.cooldown = Phaser.Math.Clamp(player.cooldown, 0, player.maxCooldown);
+
+    // --- 4. MOVIMIENTO FÍSICO / POSICIÓN ---
+    switch (player.direction) {
+        case 'up':
+            player.y -= player.speed * deltaSec;
+            break;
+        case 'down':
+            player.y += player.speed * deltaSec;
+            break;
+        case 'left':
+            player.x -= player.speed * deltaSec;
+            break;
+        case 'right':
+            player.x += player.speed * deltaSec;
+            break;
     }
 }
 
 
 
-// 2. Configuración del motor
+
+
+// Configuración del motor
 const config = {
     type: Phaser.CANVAS, // Elige WebGL si está disponible, si no Canvas
     width: 800,
