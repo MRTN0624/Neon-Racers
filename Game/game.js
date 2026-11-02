@@ -44,7 +44,8 @@ function createPlayer(scene, x, y, key, startAngle, controls, trailColor, trailG
 function create() {
     // Inicialización y pintado inicial de objetos
     this.map = this.add.image(400, 300, 'map1'); // Agrega la imagen del mapa al centro del canvas
-    this.map.setScale(0.45, 0.33); 
+    this.map.setDisplaySize(900, 680); // Ajusta el tamaño de la imagen del mapa para que ocupe todo el canvas
+    //this.map.setScale(0.45, 0.33); 
     this.map.setDepth(-1); // Establece la profundidad del mapa para que esté detrás del jugador
     
    const cursors = this.input.keyboard.createCursorKeys(); //Para jugador 2
@@ -185,6 +186,8 @@ const config = {
         create: create,
         update: update
     }
+
+   
 };
 
 // 3. Arrancar el motor de Phaser
