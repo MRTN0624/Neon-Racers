@@ -17,7 +17,8 @@ function preload() {
 }
 
 function createPlayer(scene, x, y, key, startAngle, controls, trailColor, trailGlowColor) {
-    const player = scene.add.image(x, y, key);
+    //const player = scene.add.image(x, y, key); Sin físicas
+    const player = scene.physics.add.image(x, y, key); //Añadir físicas
     player.setScale(0.05);
     player.direction = 'none';
     player.angle = startAngle;
@@ -36,6 +37,11 @@ function createPlayer(scene, x, y, key, startAngle, controls, trailColor, trailG
     player.trailColor = trailColor;         // Color capa base
     player.trailGlowColor = trailGlowColor; // Color capa brillo
 
+    //Físicas
+    
+    player.setCollideWorldBounds(true); //Por defecto toma los bordes del canvas
+    //Pero nosotros lo hemos definido en create
+   
     return player;
 }
 
@@ -48,6 +54,9 @@ function create() {
     //this.map.setScale(0.45, 0.33); 
     this.map.setDepth(-1); // Establece la profundidad del mapa para que esté detrás del jugador
     
+    this.physics.world.setBounds(45, 25, 710, 545);   //<------------- AQUI LIMITES DE MUNDO
+    //Estos valores, los he ido probando y me han convencido
+
    const cursors = this.input.keyboard.createCursorKeys(); //Para jugador 2
     const controlsPlayer2 = {
     // Captura de las teclas de dirección
@@ -181,10 +190,22 @@ const config = {
     // Vinculas directamente la etiqueta HTML que ya creaste
     canvas: document.getElementById('gameCanvas'),
     
-    scene: {
+
+
+    scene: {  //todo lo que vive en esa pantalla va colgado de esa escena
         preload: preload,
         create: create,
-        update: update
+        update: update,
+
+        physics:{
+
+    default: 'arcade',
+    arcade:{
+     gravity: { y: 0 },  // Gravedad en píxeles, 0 para que las motos no caigan
+            debug: true          // Mostrar contornos físicos
+}
+
+}
     }
 
    
