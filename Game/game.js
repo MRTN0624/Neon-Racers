@@ -38,10 +38,8 @@ function createPlayer(scene, x, y, key, startAngle, controls, trailColor, trailG
     player.trailGlowColor = trailGlowColor; // Color capa brillo
 
     //Físicas
-    
     player.setCollideWorldBounds(true); //Por defecto toma los bordes del canvas
     //Pero nosotros lo hemos definido en create
-   
     return player;
 }
 
