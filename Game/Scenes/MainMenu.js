@@ -12,11 +12,20 @@ class MainMenu extends Phaser.Scene {
          this.sound.stopByKey('game_music');
          this.sound.stopByKey('game_music2');
          this.sound.stopByKey('game_music3');
-        this.menuMusic = this.sound.add('musicMenu', {
-            loop: true,
-            volume: 0.5
-        });
-        this.menuMusic.play();
+        // this.menuMusic = this.sound.add('musicMenu', {
+        //     loop: true,
+        //     volume: 0.5
+        // });
+        // this.menuMusic.play();
+
+        // Comprobamos si la música del menú ya existe y está sonando
+        if (!this.sound.get('musicMenu') || !this.sound.get('musicMenu').isPlaying) {
+            this.menuMusic = this.sound.add('musicMenu', {
+                loop: true,
+                volume: 0.5
+            });
+            this.menuMusic.play();
+        }
 
         // 1. Configuración visual de la escena
         const canvas = document.getElementById('gameCanvas');
@@ -127,7 +136,7 @@ class MainMenu extends Phaser.Scene {
                     break;
 
                 case 1: // OPCIONES
-                    // Más adelante iniciaremos Settings
+                    this.scene.start('Settings');
                     break;
 
                 case 2: // CRÉDITOS
