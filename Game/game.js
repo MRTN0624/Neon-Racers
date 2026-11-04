@@ -253,6 +253,9 @@ const config = {
 
    
 };
-
+// Desactivar el menú contextual del navegador sobre el juego
+document.addEventListener('contextmenu', function(event) {
+    event.preventDefault();
+});
 // 3. Arrancar el motor de Phaser
 const game = new Phaser.Game(config);
