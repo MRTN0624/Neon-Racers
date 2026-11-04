@@ -108,6 +108,14 @@ class LoadingScreen extends Phaser.Scene {
         this.load.image('player1', '../img/Characters/Char1.png');
         this.load.image('player2', '../img/Characters/Char2.png');
         //----------------------------------------
+
+        // Objetos
+        this.load.image('objeto_eliminador', '../img/Objects/Eliminador.png');
+        this.load.image('objeto_congelar', '../img/Objects/Hielo.png');
+        this.load.image('objeto_inmortalidad', '../img/Objects/Inmortalidad.png');
+        this.load.image('objeto_traza', '../img/Objects/TrazaAumentada.png');
+        this.load.image('objeto_velocidad', '../img/Objects/Velocidad.png');
+
     }
 
     // Cuando termina la carga, iniciamos MainMenu en paralelo

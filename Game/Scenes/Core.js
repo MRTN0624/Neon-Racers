@@ -55,8 +55,8 @@ class Core extends Phaser.Scene {
         // };
         //Toma un objeto y te devuelve un array con los nombre de todas sus propiedades
 
-// const claves = Object.keys(persona);
-// console.log(claves); // Output: ['nombre', 'edad', 'ciudad']
+        // const claves = Object.keys(persona);
+        // console.log(claves); // Output: ['nombre', 'edad', 'ciudad']
 
         const selectedMap = Phaser.Math.RND.pick(mapKeys);
 
@@ -129,7 +129,7 @@ class Core extends Phaser.Scene {
         //Cuando phaser llame a tu funcion, dentro de la funcion this, sera la escena
 
         //Instanciacion e inicialización de la música
-       
+
         this.gameplayMusic = this.sound.add(mapConfig.music, {
             loop: true,
             volume: 0.3
@@ -162,6 +162,8 @@ class Core extends Phaser.Scene {
             // Comprobar colisiones entre motos y estelas
             checkTrailCollisions(this, this.players[0], this.players[1]);
 
+            // Comprobar colisiones entre motos y objetos
+            collisionPlayerObject(this.players);
         }
 
     }
@@ -297,6 +299,6 @@ function createPlayer(scene, x, y, key, startAngle, controls, trailColor, trailG
     player.setCollideWorldBounds(true); //Por defecto toma los bordes del canvas
     //Pero nosotros lo hemos definido en create
     player.alive = true; //Para Collision
-    
+
     return player;
 }
