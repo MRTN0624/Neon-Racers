@@ -11,7 +11,9 @@ function preload() {
     this.load.image('map3', '../img/Maps/Mapa3.jpg');
     //----------------------------------------
     //SONIDOS---------------------------------
-    this.load.audio('game_music','../Sounds/Tron Legacy 8 bit.mp3')
+    this.load.audio('game_music', '../Sounds/TRON Legacy - 8-Bit GRID 2.0.mp3');
+    this.load.audio('game_music2', '../Sounds/TRON Ares Arcade.mp3');
+    this.load.audio('game_music3', '../Sounds/TRON - The Son of Flynn 8-bit cover.mp3');
     this.load.audio('musicVictory', '../Sounds/Tron Legacy 8-Bit End Credits.mp3');
     //----------------------------------------
     //Personajes------------------------------
@@ -52,12 +54,52 @@ function createPlayer(scene, x, y, key, startAngle, controls, trailColor, trailG
 
 //Codigo refactorizado, ver atras para entenderlo mejor en flujo versiones
 function create() {
+const maps = {
+
+    map1: {
+        key: 'map1',
+        music: 'game_music',
+        bounds: {
+            x: 45,
+            y: 25,
+            width: 710,
+            height: 545
+        }
+    },
+
+    map2: {
+        key: 'map2',
+        music: 'game_music2',
+        bounds: {
+            x: 45,
+            y: 25,
+            width: 710,
+            height: 545
+        }
+    },
+
+    map3: {
+        key: 'map3',
+        music: 'game_music3',
+        bounds: {
+            x: 45,
+            y: 25,
+            width: 710,
+            height: 545
+        }
+    }
+
+};
+    const selectedMap = 'map1';
     // Inicialización y pintado inicial de objetos
-    this.map = this.add.image(400, 300, 'map1'); // Agrega la imagen del mapa al centro del canvas
-    this.map.setDisplaySize(900, 680); // Ajusta el tamaño de la imagen del mapa para que ocupe todo el canvas
-    //this.map.setScale(0.45, 0.33); 
-    this.map.setDepth(-1); // Establece la profundidad del mapa para que esté detrás del jugador
-    
+    const mapConfig = maps[selectedMap];
+
+    // Pintamos el mapa seleccionado
+    this.map = this.add.image(400, 300, mapConfig.key);
+
+    this.map.setDisplaySize(900, 680);
+    this.map.setDepth(-1);
+
     this.physics.world.setBounds(45, 25, 710, 545);   //<------------- AQUI LIMITES DE MUNDO
     //Estos valores, los he ido probando y me han convencido
 
@@ -106,7 +148,9 @@ this.physics.add.overlap(  //Asi phaser buscará detectar si hay superposición 
 
 //Instanciacion e inicialización de la música
 
-this.gameplayMusic = this.sound.add('game_music', {
+// Instanciación e inicialización de la música
+
+this.gameplayMusic = this.sound.add(mapConfig.music, {
     loop: true,
     volume: 0.3
 });
