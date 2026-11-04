@@ -90,7 +90,7 @@ const maps = {
     }
 
 };
-    const selectedMap = 'map1';
+    const selectedMap = 'map2';
     // Inicialización y pintado inicial de objetos
     const mapConfig = maps[selectedMap];
 
