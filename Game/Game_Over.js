@@ -9,7 +9,7 @@
 
 // Determina el resultado de la partida
 function showGameOver(scene, player1, player2) {
-
+    scene.gameOverMusic.play();
     let result;
 
     if (!player1.alive && !player2.alive) {

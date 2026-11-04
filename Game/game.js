@@ -132,10 +132,8 @@ function update(time, delta) {
      // Comprobar colisiones entre motos y estelas
     
         checkTrailCollisions(this, this.players[0], this.players[1]);
-    }else{
-        //Ha saltado game over 
-        this.gameOverMusic.play();
     }
+    
 
 }
 
