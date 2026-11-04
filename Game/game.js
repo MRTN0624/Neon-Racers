@@ -73,7 +73,7 @@ right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
 nitro: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 //Permite registrar cada tecla de forma individual, para luego usarlas directamente
     };
-this.players = [
+this.players = [ //ARRAY DE PLAYERS
     createPlayer(this, 115, 520, 'player1', 0, controlsPlayer1, 0x990000, 0xFF3333),
     createPlayer(this, 685, 80, 'player2', 180, controlsPlayer2, 0x000099, 0x3333FF)
 ];
