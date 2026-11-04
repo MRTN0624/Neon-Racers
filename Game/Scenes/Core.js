@@ -127,6 +127,12 @@ class Core extends Phaser.Scene {
 
         this.gameplayMusic.play();
 
+        this.time.addEvent({
+            delay: 5000,
+            callback: () => RandomObjectGenerator(this),
+            loop: true
+        });
+
     }
 
     update(time, delta) {
