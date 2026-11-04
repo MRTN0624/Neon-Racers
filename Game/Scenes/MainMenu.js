@@ -1,4 +1,3 @@
-
 class MainMenu extends Phaser.Scene {
 
     constructor() {
@@ -7,6 +6,17 @@ class MainMenu extends Phaser.Scene {
 
     // Inicialización de los elementos del menú principal
     create() {
+        //Se para la musica de victory 
+        
+       
+         this.sound.stopByKey('game_music');
+         this.sound.stopByKey('game_music2');
+         this.sound.stopByKey('game_music3');
+        this.menuMusic = this.sound.add('musicMenu', {
+            loop: true,
+            volume: 0.5
+        });
+        this.menuMusic.play();
 
         // 1. Configuración visual de la escena
         const canvas = document.getElementById('gameCanvas');
@@ -60,6 +70,8 @@ class MainMenu extends Phaser.Scene {
         this.updateMenuSelection();
 
         // 5. NAVEGACIÓN POR EL MENÚ
+
+        // Desplazamiento hacia arriba (Flecha UP / W)
         this.input.keyboard.on('keydown-UP', () => {
 
             this.selectedOption--;
@@ -71,7 +83,30 @@ class MainMenu extends Phaser.Scene {
             this.updateMenuSelection();
         });
 
+        this.input.keyboard.on('keydown-W', () => {
+
+            this.selectedOption--;
+
+            if (this.selectedOption < 0) {
+                this.selectedOption = this.menuOptions.length - 1;
+            }
+
+            this.updateMenuSelection();
+        });
+
+        // Desplazamiento hacia abajo (Flecha DOWN / S)
         this.input.keyboard.on('keydown-DOWN', () => {
+
+            this.selectedOption++;
+
+            if (this.selectedOption >= this.menuOptions.length) {
+                this.selectedOption = 0;
+            }
+
+            this.updateMenuSelection();
+        });
+
+        this.input.keyboard.on('keydown-S', () => {
 
             this.selectedOption++;
 
@@ -96,7 +131,7 @@ class MainMenu extends Phaser.Scene {
                     break;
 
                 case 2: // CRÉDITOS
-                    // Más adelante iniciaremos Credits
+                    this.scene.start('Credits');
                     break;
             }
 

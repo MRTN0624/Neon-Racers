@@ -7,7 +7,7 @@ class Core extends Phaser.Scene {
 
     // Inicialización y pintado inicial de objetos
     create() {
-
+        this.sound.stopByKey('musicMenu');
         const maps = {
 
             map1: {
@@ -114,7 +114,7 @@ class Core extends Phaser.Scene {
         //Cuando phaser llame a tu funcion, dentro de la funcion this, sera la escena
 
         //Instanciacion e inicialización de la música
-
+       
         this.gameplayMusic = this.sound.add(mapConfig.music, {
             loop: true,
             volume: 0.3

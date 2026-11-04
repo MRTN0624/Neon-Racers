@@ -86,6 +86,7 @@ class LoadingScreen extends Phaser.Scene {
          // MENU------------------------------------
         this.load.image('menuBackground', '../img/Menu/MainMenu.jpg');
         this.load.image('menuArrow', '../img/Menu/arrow.png');
+        this.load.image('menuOptions', '../img/Menu/backGroundOptionsMenu.jpg');
          //----------------------------------------
 
 
@@ -100,6 +101,7 @@ class LoadingScreen extends Phaser.Scene {
         this.load.audio('game_music2', '../Sounds/TRON Ares Arcade.mp3');
         this.load.audio('game_music3', '../Sounds/TRON - The Son of Flynn 8-bit cover.mp3');
         this.load.audio('musicVictory', '../Sounds/Tron Legacy 8-Bit End Credits.mp3');
+        this.load.audio('musicMenu','../Sounds/Tron Legacy The Grid 8 bit.mp3');
         //----------------------------------------
 
         // Personajes------------------------------
