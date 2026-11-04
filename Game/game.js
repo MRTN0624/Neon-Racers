@@ -1,3 +1,6 @@
+//CODIGO PERTENECIENTE AL CORE DEL JUEGO
+
+
 // 1. Funciones del ciclo de vida del juego
 function preload() {
     // Carga de recursos (imágenes, sonidos)
@@ -8,7 +11,8 @@ function preload() {
     this.load.image('map3', '../img/Maps/Mapa3.jpg');
     //----------------------------------------
     //SONIDOS---------------------------------
-
+    this.load.audio('game_music','../Sounds/Tron Legacy 8 bit.mp3')
+    this.load.audio('musicVictory', '../Sounds/Tron Legacy 8-Bit End Credits.mp3');
     //----------------------------------------
     //Personajes------------------------------
     this.load.image('player1', '../img/Characters/Char1.png');
@@ -100,6 +104,21 @@ this.physics.add.overlap(  //Asi phaser buscará detectar si hay superposición 
 // y el quinto parámetro se refiere a la escena
 //Cuando phaser llame a tu funcion, dentro de la funcion this, sera la escena
 
+//Instanciacion e inicialización de la música
+
+this.gameplayMusic = this.sound.add('game_music', {
+    loop: true,
+    volume: 0.3
+});
+
+this.gameOverMusic = this.sound.add('musicVictory', {
+    loop: true,
+    volume: 0.5
+});
+
+this.gameplayMusic.play();
+
+
 }
 
 function update(time, delta) {
@@ -114,6 +133,7 @@ function update(time, delta) {
     
         checkTrailCollisions(this, this.players[0], this.players[1]);
     }
+    
 
 }
 
@@ -208,7 +228,20 @@ if (player.controls.nitro && player.controls.nitro.isDown && player.cooldown > 0
 }
 
 
+// Reduce progresivamente el volumen de la música hasta detenerla
+function fadeOutMusic(scene) {
 
+    scene.tweens.add({
+        targets: scene.gameplayMusic,
+        volume: 0,
+        duration: 1500, // Duración del fade out en milisegundos
+        ease: 'Linear',
+
+        onComplete: () => {
+            scene.gameplayMusic.stop();
+        }
+    });
+}
 
 
 // Configuración del motor
