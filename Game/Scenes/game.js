@@ -312,7 +312,9 @@ const config = {
 }
 
 }
-    }
+    },
+
+    scene: [LoadingScreen,MainMenu,Core,Settings,Credits]
 
    
 };
