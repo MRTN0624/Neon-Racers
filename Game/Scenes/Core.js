@@ -45,7 +45,22 @@ class Core extends Phaser.Scene {
 
         };
 
-        const selectedMap = 'map3';
+        // Selección aleatoria del mapa utilizando las claves del objeto maps
+        const mapKeys = Object.keys(maps);
+        //Ejemplo de uso de esto
+        // const persona = {
+        //     nombre: 'Juan',
+        //     edad: 25,
+        //     ciudad: 'Madrid'
+        // };
+        //Toma un objeto y te devuelve un array con los nombre de todas sus propiedades
+
+// const claves = Object.keys(persona);
+// console.log(claves); // Output: ['nombre', 'edad', 'ciudad']
+
+        const selectedMap = Phaser.Math.RND.pick(mapKeys);
+
+        //const selectedMap = 'map3';
 
         // Inicialización y pintado inicial de objetos
         const mapConfig = maps[selectedMap];
