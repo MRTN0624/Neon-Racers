@@ -228,7 +228,20 @@ if (player.controls.nitro && player.controls.nitro.isDown && player.cooldown > 0
 }
 
 
+// Reduce progresivamente el volumen de la música hasta detenerla
+function fadeOutMusic(scene) {
 
+    scene.tweens.add({
+        targets: scene.gameplayMusic,
+        volume: 0,
+        duration: 1500, // Duración del fade out en milisegundos
+        ease: 'Linear',
+
+        onComplete: () => {
+            scene.gameplayMusic.stop();
+        }
+    });
+}
 
 
 // Configuración del motor

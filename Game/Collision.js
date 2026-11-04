@@ -152,7 +152,7 @@ function resolveCollision(scene, player1, player2, collisionType) {
     scene.gameOverTriggered = true;
 
     // Aquí conectaremos el Game Over correspondiente.
-    scene.gameplayMusic.stop(); //Paramos la cancion de gameplay
+    fadeOutMusic(scene); //Paramos la game music
     showGameOver(scene, player1, player2);
 }
 
