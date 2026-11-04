@@ -5,9 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neon Racers</title>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.88.2/dist/phaser.js"></script> <!--Carga de Phaser, ahora tengo disponibles  sistemas de renderizado, gestores de escenas, motores de fisicas, sistema de inputs, de cargar recursos,  etc..-->
-    <script src="game.js" defer></script> <!-- Carga del script principal del juego mientras se sigue leyendo el HTML, no se ejecuta hasta que la web se haya cargado -->
-    <script src="Collision.js" defer></script>
-    <script src="Game_Over.js" defer></script>
+    
+    <!-- Escenas del juego -->
+    <script src="Scenes/LoadingScreen.js" defer></script>
+    <script src="Scenes/MainMenu.js" defer></script>
+    <script src="Scenes/Core.js" defer></script>
+    <script src="Scenes/Settings.js" defer></script>
+    <script src="Scenes/Credits.js" defer></script>
+
+    <!-- Funciones auxiliares -->
+    <script src="Mecanics/Collision.js" defer></script>
+    <script src="Mecanics/Game_Over.js" defer></script>
+
+
+    <!-- Configuración e inicialización del juego -->
+    <script src="Scenes/gameConfig.js" defer></script>
+    <!--Asi Javascript puede utilizar las clases que ya han sido definidas de antes
+
+    <!-- Hoja de estilos -->    
     <link rel="stylesheet" href="decor.css">
 </head>
 <body>
@@ -31,7 +46,7 @@
             <div class="coin-slot">INSERT COIN [1P]</div>
             <h1 class="neon-title">
 
-                <img src = "../img/Neon_Racers_Logo_Transparent.png" class = "logo-img">
+                <img src = "../img/Neon_Racer_Transparent.png" class = "logo-img">
             </h1>
             <!--<div class="arcade-status">HIGH SCORE: <span id="top-score">99990</span></div>
         </header>
