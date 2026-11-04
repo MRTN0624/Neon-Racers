@@ -40,6 +40,8 @@ function createPlayer(scene, x, y, key, startAngle, controls, trailColor, trailG
     //Físicas
     player.setCollideWorldBounds(true); //Por defecto toma los bordes del canvas
     //Pero nosotros lo hemos definido en create
+    player.alive = true; //Para Collision
+    
     return player;
 }
 
@@ -55,6 +57,7 @@ function create() {
     this.physics.world.setBounds(45, 25, 710, 545);   //<------------- AQUI LIMITES DE MUNDO
     //Estos valores, los he ido probando y me han convencido
 
+   
    const cursors = this.input.keyboard.createCursorKeys(); //Para jugador 2
     const controlsPlayer2 = {
     // Captura de las teclas de dirección
@@ -77,13 +80,41 @@ this.players = [ //ARRAY DE PLAYERS
     createPlayer(this, 115, 520, 'player1', 0, controlsPlayer1, 0x990000, 0xFF3333),
     createPlayer(this, 685, 80, 'player2', 180, controlsPlayer2, 0x000099, 0x3333FF)
 ];
+
+this.gameOverTriggered = false;  //Ha saltado el game_over?
+
+this.physics.add.overlap(  //Asi phaser buscará detectar si hay superposición espacial.
+    player1 = this.players[0], //Ya lo comprueba phaser de forma constante, sin necesidad de registrarlo en update
+    player2 =  this.players[1], //en el momento en que lo detecte, llamaa a la funcion que delega en resolveCollision para gestionar la colision
+    handlePlayerOverlap,
+    null,
+    this
+);
+//Add Overlap tiene 5 parámetros
+// El primero es el objeto 
+// contra el que quieres comprobar el solapamiento, la primera moto
+// El segundo objeto, la segunda moto, el tercero
+// la funcion que se ejecuta al detectar solapamiento,
+// El cuarto parámetro sirve para darle una funcion que se ejecuta antes de la funcion 
+// principal
+// y el quinto parámetro se refiere a la escena
+//Cuando phaser llame a tu funcion, dentro de la funcion this, sera la escena
+
 }
 
 function update(time, delta) {
+  
+  if (!this.gameOverTriggered) {
     // Recorremos todos los jugadores registrados
     this.players.forEach(player => {  //Es una funcion flecha que recorre el array de jugadores y actualiza cada uno de ellos
         updatePlayer(player, delta);
     });
+
+     // Comprobar colisiones entre motos y estelas
+    
+        checkTrailCollisions(this, this.players[0], this.players[1]);
+    }
+
 }
 
 function updatePlayer(player, delta) {
