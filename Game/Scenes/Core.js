@@ -45,7 +45,7 @@ class Core extends Phaser.Scene {
 
         };
 
-        const selectedMap = 'map2';
+        const selectedMap = 'map3';
 
         // Inicialización y pintado inicial de objetos
         const mapConfig = maps[selectedMap];
