@@ -12,7 +12,7 @@ function preload() {
     //----------------------------------------
     //SONIDOS---------------------------------
     this.load.audio('game_music','../Sounds/Tron Legacy 8 bit.mp3')
-    this.load.audio('musicVictory', '../Sounds/victory.mp3');
+    this.load.audio('musicVictory', '../Sounds/Tron Legacy 8-Bit End Credits.mp3');
     //----------------------------------------
     //Personajes------------------------------
     this.load.image('player1', '../img/Characters/Char1.png');
@@ -111,6 +111,11 @@ this.gameplayMusic = this.sound.add('game_music', {
     volume: 0.3
 });
 
+this.gameOverMusic = this.sound.add('musicVictory', {
+    loop: true,
+    volume: 0.5
+});
+
 this.gameplayMusic.play();
 
 
@@ -127,6 +132,9 @@ function update(time, delta) {
      // Comprobar colisiones entre motos y estelas
     
         checkTrailCollisions(this, this.players[0], this.players[1]);
+    }else{
+        //Ha saltado game over 
+        this.gameOverMusic.play();
     }
 
 }
