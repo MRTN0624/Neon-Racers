@@ -43,9 +43,6 @@ function destroyObject(object, index) {
 }
 
 
-
-
-
 function createObject(scene, x, y, key) {
     const object = scene.add.image(x, y, key);
     object.setScale(0.18);
@@ -57,64 +54,114 @@ function createObject(scene, x, y, key) {
     return object;
 }
 
-function collisionPlayerObject(playersArray) {
+function collisionPlayerObject(scene, playersArray) {
 
-    const radius = Math.max(
-        playersArray[0].body.width,
-        playersArray[0].body.height
-    ) / 2 + 5;
+    if (playersArray.length === 2 && RandomObjects.length != 0) {
 
-    let distancia = 0;
-    for (let i = 0; i < playersArray.length; i++) {
-        for (let j = 0; j < RandomObjects.length; j++) {
-            distance = Phaser.Math.Distance.Between(playersArray[i].x, playersArray[i].y, RandomObjects[j].x, RandomObjects[j].y);
-            if (distance < radius) {
-                destroyObject(RandomObjects[j], j);
-                //powerUp(RandomObjects[j].type);
+        const radius = Math.max(
+            playersArray[0].body.width,
+            playersArray[0].body.height
+        ) / 2 + 5;
+
+        let distancia = 0;
+        for (let i = 0; i < playersArray.length; i++) {
+            for (let j = 0; j < RandomObjects.length; j++) {
+                distance = Phaser.Math.Distance.Between(playersArray[i].x, playersArray[i].y, RandomObjects[j].x, RandomObjects[j].y);
+                if (distance < radius) {
+
+                    if (i === 0) powerUp(scene, RandomObjects[j].type, playersArray[i], playersArray[i + 1]);
+                    else if (i === 1) powerUp(scene, RandomObjects[j].type, playersArray[i], playersArray[i - 1]);
+
+                    destroyObject(RandomObjects[j], j);
+                    j--;
+                }
             }
         }
     }
 
 }
 
-function powerUp(type){
+function powerUp(scene, type, playerGet, playerOther) {
 
+    let objectTime = 0;
+    let player = playerGet;
     switch (type) {
         case 'objeto_eliminador':
-            eliminatePowerUp();
+            player = playerOther;
+            eliminatePowerUp(player);
+            objectTime = 0;
             break;
         case 'objeto_congelar':
-            freezePowerUp();
+            player = playerOther;
+            freezePowerUp(player);
+            objectTime = 3000;
             break;
         case 'objeto_inmortalidad':
-            inmortalPowerUp();
+            player = playerGet;
+            inmortalPowerUp(player);
+            objectTime = 3000;
             break;
         case 'objeto_traza':
-            trailsPowerUp();
+            player = playerGet;
+            trailPowerUp(player);
+            objectTime = 3000;
             break;
         case 'objeto_velocidad':
-            speedPowerUp();
+            player = playerGet
+            speedPowerUp(player);
+            objectTime = 3000;
             break;
+    }
+
+    if (objectTime != 0) {
+        scene.time.addEvent({
+            delay: objectTime,
+            callback: () => stopPowerUp(player, type),
+            loop: false
+        });
     }
 
 }
 
-function eliminatePowerUp(){
-
+function eliminatePowerUp(player) {
+    player.trail.length = 0;
 }
 
-function freezePowerUp(){
-
+function freezePowerUp(player) {
+    player.speed = 0;
+    player.fullNitro = true;
 }
 
-function inmortalPowerUp(){
-
+function inmortalPowerUp(player) {
+    player.inmortal = true;
 }
 
-function trailsPowerUp(){
-
+function trailPowerUp(player) {
+    player.trailMaxSize = 75;
 }
 
-function speedPowerUp(){
+function speedPowerUp(player) {
+    player.speed = 600;
+    player.fullNitro = true;
+}
+
+function stopPowerUp(player, type) {
+
+    if (type === 'objeto_congelar' || 'objeto_velocidad') {
+        player.speed = 300;
+        player.fullNitro = false;
+    }
+
+    if (type === 'objeto_inmortalidad') {
+        player.inmortal = false;
+    }
+
+    if (type === 'objeto_traza') {
+        player.trailMaxSize = 50;
+        while (player.trail.length > player.trailMaxSize) {
+            player.trail.shift();
+        }
+    }
+
 
 }

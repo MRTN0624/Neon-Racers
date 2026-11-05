@@ -102,22 +102,46 @@ function resolveCollision(scene, player1, player2, collisionType) {
     // Mueren ambos jugadores
     if (collisionType === 'player-player') {
 
-        player1.alive = false;
-        player2.alive = false;
+        if (player1.inmortal === false && player2.inmortal === false) {
 
 
-        createExplosion(scene, player1);
-        createExplosion(scene, player2);
+            player1.alive = false;
+            player2.alive = false;
 
-        player1.destroy(); // Se destruye la moto 1
-        player2.destroy(); // Se destruye la moto 2
 
-        console.log("Ambas motos han sido destruidas");
+            createExplosion(scene, player1);
+            createExplosion(scene, player2);
+
+            player1.destroy(); // Se destruye la moto 1
+            player2.destroy(); // Se destruye la moto 2
+
+            console.log("Ambas motos han sido destruidas");
+        }
+
+        else if (player1.inmortal === false && player2.inmortal === true) {
+            player1.alive = false;
+            createExplosion(scene, player1);
+            player1.destroy(); // Se destruye la moto 1
+
+            console.log("Jugador 2 ha ganado");
+        }
+
+        else if (player1.inmortal === true && player2.inmortal === false) {
+            player2.alive = false;
+            createExplosion(scene, player2);
+            player2.destroy(); // Se destruye la moto 2
+
+            console.log("Jugador 1 ha ganado");
+        }
+
+        else {
+            return;
+        }
     }
 
     // 2. Moto 1 contra estela de moto 2
     // Muere únicamente moto 1
-    else if (collisionType === 'player1-trail2') {
+    else if (collisionType === 'player1-trail2' && player1.inmortal === false) {
 
         player1.alive = false;
         createExplosion(scene, player1);
@@ -128,10 +152,10 @@ function resolveCollision(scene, player1, player2, collisionType) {
 
     // 3. Moto 2 contra estela de moto 1
     // Muere únicamente moto 2
-    else if (collisionType === 'player2-trail1') {
+    else if (collisionType === 'player2-trail1' && player2.inmortal === false) {
 
         player2.alive = false;
-         createExplosion(scene, player2);
+        createExplosion(scene, player2);
         player2.destroy(); // Se destruye la moto 2
 
         console.log("Jugador 1 ha ganado");

@@ -163,7 +163,7 @@ class Core extends Phaser.Scene {
             checkTrailCollisions(this, this.players[0], this.players[1]);
 
             // Comprobar colisiones entre motos y objetos
-            collisionPlayerObject(this.players);
+            collisionPlayerObject(this, this.players);
         }
 
     }
@@ -178,7 +178,7 @@ function updatePlayer(player, delta) {
     // --- 1. LÓGICA DE ESTELA (TRAIL) ---
     player.trail.push({ x: player.x, y: player.y });
 
-    if (player.trail.length > 50) {
+    if (player.trail.length > player.trailMaxSize) {
         player.trail.shift();
     }
 
@@ -227,19 +227,21 @@ function updatePlayer(player, delta) {
     }
 
     // --- 3. LÓGICA DE NITRO / COOLDOWN ---
-    if (player.controls.nitro && player.controls.nitro.isDown && player.cooldown > 0) {
-        player.speed = 600;
-        player.cooldown -= deltaSec;
-    } else {
-        player.speed = 300;
+    if (player.fullNitro === false) {
+        if (player.controls.nitro && player.controls.nitro.isDown && player.cooldown > 0) {
+            player.speed = 600;
+            player.cooldown -= deltaSec;
+        } else {
+            player.speed = 300;
 
-        if (player.controls.nitro && !player.controls.nitro.isDown) {
-            player.cooldown += deltaSec;
+            if (player.controls.nitro && !player.controls.nitro.isDown) {
+                player.cooldown += deltaSec;
+            }
         }
-    }
 
-    // Mantener cooldown en los rangos [0, maxCooldown]
-    player.cooldown = Phaser.Math.Clamp(player.cooldown, 0, player.maxCooldown);
+        // Mantener cooldown en los rangos [0, maxCooldown]
+        player.cooldown = Phaser.Math.Clamp(player.cooldown, 0, player.maxCooldown);
+    }
 
     // --- 4. MOVIMIENTO FÍSICO / POSICIÓN ---
     switch (player.direction) {
@@ -287,11 +289,14 @@ function createPlayer(scene, x, y, key, startAngle, controls, trailColor, trailG
     player.cooldown = 5;
     player.maxCooldown = 5;
     player.controls = controls; // Mapeo de controles pasados como objeto
+    player.fullNitro = false; // Control del poder de velocidad
+    player.inmortal = false; // Control del poder de inmortalidad
 
     // Estela de movimiento
     player.trailGraphics = scene.add.graphics();
     player.trailGraphics.setDepth(0);
     player.trail = [];
+    player.trailMaxSize = 50; //Control del poder de traza aumentada
     player.trailColor = trailColor;         // Color capa base
     player.trailGlowColor = trailGlowColor; // Color capa brillo
 
