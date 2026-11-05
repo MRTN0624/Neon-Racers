@@ -152,11 +152,11 @@ function stopPowerUp(player, type) {
         player.fullNitro = false;
     }
 
-    if (type === 'objeto_inmortalidad') {
+    else if (type === 'objeto_inmortalidad') {
         player.inmortal = false;
     }
 
-    if (type === 'objeto_traza') {
+    else if (type === 'objeto_traza') {
         player.trailMaxSize = 50;
         while (player.trail.length > player.trailMaxSize) {
             player.trail.shift();
