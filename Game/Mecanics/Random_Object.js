@@ -107,7 +107,7 @@ function powerUp(scene, type, playerGet, playerOther) {
             objectTime = 3000;
             break;
         case 'objeto_velocidad':
-            player = playerGet
+            player = playerGet;
             speedPowerUp(player);
             objectTime = 3000;
             break;
@@ -147,7 +147,7 @@ function speedPowerUp(player) {
 
 function stopPowerUp(player, type) {
 
-    if (type === 'objeto_congelar' || 'objeto_velocidad') {
+    if (type === 'objeto_congelar' || type === 'objeto_velocidad') {
         player.speed = 300;
         player.fullNitro = false;
     }
