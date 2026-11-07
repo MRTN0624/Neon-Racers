@@ -85,7 +85,7 @@ class Settings extends Phaser.Scene {
         this.add.text(
             width / 2,
             height - 50,
-            'PULSA ESC O ENTER PARA VOLVER',
+            'PULSA ESC PARA VOLVER',
             {
                 fontSize: '16px',
                 color: '#00ffff',
@@ -95,12 +95,9 @@ class Settings extends Phaser.Scene {
 
         // Controles de retorno
         const keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
-        const keyENTER = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
 
         keyESC.removeAllListeners();
-        keyENTER.removeAllListeners();
 
         keyESC.on('down', () => this.scene.start('MainMenu'));
-        keyENTER.on('down', () => this.scene.start('MainMenu'));
     }
 }

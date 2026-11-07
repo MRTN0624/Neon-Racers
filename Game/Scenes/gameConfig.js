@@ -24,7 +24,7 @@ const config = {
 }
 
         },
-    scene: [LoadingScreen,MainMenu,Core,Settings,Credits] //Unicamente definimos las escenas que tendrá
+    scene: [LoadingScreen,MainMenu,Core,Settings,Credits,Help] //Unicamente definimos las escenas que tendrá
     //que arrancar el motor de juego y cada escena heredará de Phaser.Scene para tener las propiedades típicas
     //Javascript permite sobreescribir métodos heredados
    

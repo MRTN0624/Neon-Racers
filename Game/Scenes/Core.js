@@ -95,8 +95,7 @@ class Core extends Phaser.Scene {
             up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
             down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
             left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
-            right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
-            nitro: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+            right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
             //Permite registrar cada tecla de forma individual, para luego usarlas directamente
         };
 
@@ -226,24 +225,7 @@ function updatePlayer(player, delta) {
         player.direction = 'down';
     }
 
-    // --- 3. LÓGICA DE NITRO / COOLDOWN ---
-    if (player.fullNitro === false) {
-        if (player.controls.nitro && player.controls.nitro.isDown && player.cooldown > 0) {
-            player.speed = 600;
-            player.cooldown -= deltaSec;
-        } else {
-            player.speed = 300;
-
-            if (player.controls.nitro && !player.controls.nitro.isDown) {
-                player.cooldown += deltaSec;
-            }
-        }
-
-        // Mantener cooldown en los rangos [0, maxCooldown]
-        player.cooldown = Phaser.Math.Clamp(player.cooldown, 0, player.maxCooldown);
-    }
-
-    // --- 4. MOVIMIENTO FÍSICO / POSICIÓN ---
+    // --- 3. MOVIMIENTO FÍSICO / POSICIÓN ---
     switch (player.direction) {
         case 'up':
             player.y -= player.speed * deltaSec;
@@ -286,8 +268,6 @@ function createPlayer(scene, x, y, key, startAngle, controls, trailColor, trailG
 
     // Propiedades del jugador
     player.speed = 300;
-    player.cooldown = 5;
-    player.maxCooldown = 5;
     player.controls = controls; // Mapeo de controles pasados como objeto
     player.fullNitro = false; // Control del poder de velocidad
     player.inmortal = false; // Control del poder de inmortalidad

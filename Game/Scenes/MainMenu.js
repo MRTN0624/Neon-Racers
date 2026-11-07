@@ -41,12 +41,18 @@ class MainMenu extends Phaser.Scene {
         // - JUGAR
         // - OPCIONES
         // - CRÉDITOS
-        const options = ['JUGAR', 'OPCIONES', 'CRÉDITOS'];
+        const options = [
+            'JUGAR',
+            'OPCIONES',
+            'AYUDA',
+            'CRÉDITOS',
+            'SALIR'
+        ];
 
         this.menuOptions = [];
 
         // Posición inicial de las opciones
-        const startY = height / 2;
+        const startY = height / 2 - 20;
         const spacing = 60;
 
         options.forEach((option, index) => {
@@ -129,22 +135,31 @@ class MainMenu extends Phaser.Scene {
         // 6. CONFIRMACIÓN DE LA OPCIÓN SELECCIONADA
         this.input.keyboard.on('keydown-ENTER', () => {
 
-            switch (this.selectedOption) {
+    switch (this.selectedOption) {
 
-                case 0: // JUGAR
-                    this.scene.start('Core');
-                    break;
+            case 0: // JUGAR
+                this.scene.start('Core');
+                break;
 
-                case 1: // OPCIONES
-                    this.scene.start('Settings');
-                    break;
+            case 1: // OPCIONES
+                this.scene.start('Settings');
+                break;
 
-                case 2: // CRÉDITOS
-                    this.scene.start('Credits');
-                    break;
-            }
+            case 2: // AYUDA
+                this.scene.start('Help');
+                break;
 
-        });
+            case 3: // CRÉDITOS
+                this.scene.start('Credits');
+                break;
+
+            case 4: // SALIR
+                this.sound.stopByKey('musicMenu');
+                this.scene.stop();
+                break;
+        }
+
+    });
 
         // Cuando el menú esté preparado, retiramos LoadingScreen
         this.scene.stop('LoadingScreen');
