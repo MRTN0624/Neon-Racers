@@ -20,7 +20,7 @@ const config = {
     default: 'arcade',
     arcade:{
      gravity: { y: 0 },  // Gravedad en píxeles, 0 para que las motos no caigan
-            debug: false          // Mostrar contornos físicos
+            debug: true          // Mostrar contornos físicos
 }
 
         },

@@ -262,6 +262,7 @@ function createPlayer(scene, x, y, key, startAngle, controls, trailColor, trailG
     //const player = scene.add.image(x, y, key); Sin físicas
     const player = scene.physics.add.image(x, y, key); //Añadir físicas
     player.setScale(0.05);
+    player.body.setSize(800,1100,true);
     player.direction = 'none';
     player.angle = startAngle;
     player.setDepth(1);
