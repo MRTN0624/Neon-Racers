@@ -118,6 +118,13 @@ html, body {
    DECORACIÓN HUD / ESQUINAS ARCADE
    ========================================== */
 
+.coin-slot {
+    position:relative;
+    top: 10px; 
+    left:6%;
+    z-index : 4;
+}
+
 /* Contenedor que cubre toda la pantalla sin bloquear clics */
 .hud-frame {
     position: fixed;

@@ -93,7 +93,7 @@ class Help extends Phaser.Scene {
         this.add.text(
             width * 3 / 4,
             285,
-            'JUGADOR 2\n\nFlechas - Movimiento',
+            'JUGADOR 2\n\n↑ ↓ ← →  - Movimiento',
             {
                 fontSize: '16px',
                 color: '#ffffff',

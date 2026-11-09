@@ -46,7 +46,7 @@ class MainMenu extends Phaser.Scene {
             'OPCIONES',
             'AYUDA',
             'CRÉDITOS',
-            'SALIR'
+           // 'SALIR'
         ];
 
         this.menuOptions = [];
@@ -154,8 +154,8 @@ class MainMenu extends Phaser.Scene {
                 break;
 
             case 4: // SALIR
-                this.sound.stopByKey('musicMenu');
-                this.scene.stop();
+            //    this.sound.stopByKey('musicMenu');
+            //  this.scene.stop();
                 break;
         }
 
