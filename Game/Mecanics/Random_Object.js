@@ -29,7 +29,6 @@ function RandomObjectGenerator(scene) {
             randomObject = createObject(scene, randomX, randomY, 'objeto_velocidad');
             break;
     }
-
     RandomObjects.push(randomObject);
 
     if (RandomObjects.length > 3) {
@@ -44,83 +43,93 @@ function destroyObject(object, index) {
 
 
 function createObject(scene, x, y, key) {
-    const object = scene.add.image(x, y, key);
+    let object = scene.physics.add.image(x, y, key);
     object.setScale(0.18);
 
     object.x = x;
     object.y = y;
     object.type = key;
 
+    scene.physics.add.overlap(scene.players[0], object, (j1, j2, o) => {
+        j1 = scene.players[0];
+        j2 = scene.players[1];
+        o = object;
+
+        powerUpType(j1, j2, o, scene);
+
+        object.destroy();
+
+        for (let j = 0; j < RandomObjects.length; j++) {
+            if (RandomObjects[j] === null) {
+                RandomObjects.splice(j, 1);
+            }
+        }
+
+
+    });
+
+    scene.physics.add.overlap(scene.players[1], object, (j1, j2, o) => {
+        j1 = scene.players[1];
+        j2 = scene.players[0];
+        o = object;
+
+        powerUpType(j1, j2, o, scene);
+
+        object.destroy();
+
+        for (let j = 0; j < RandomObjects.length; j++) {
+            if (RandomObjects[j] == null) {
+                RandomObjects.splice(j, 1);
+            }
+        }
+
+    });
+
     return object;
 }
 
-function collisionPlayerObject(scene, playersArray) {
-
-    if (playersArray.length === 2 && RandomObjects.length != 0) {
-
-        const radius = Math.max(
-            playersArray[0].body.width,
-            playersArray[0].body.height
-        ) / 2 + 5;
-
-        let distancia = 0;
-        for (let i = 0; i < playersArray.length; i++) {
-            for (let j = 0; j < RandomObjects.length; j++) {
-                distance = Phaser.Math.Distance.Between(playersArray[i].x, playersArray[i].y, RandomObjects[j].x, RandomObjects[j].y);
-                if (distance < radius) {
-
-                    if (i === 0) powerUp(scene, RandomObjects[j].type, playersArray[i], playersArray[i + 1]);
-                    else if (i === 1) powerUp(scene, RandomObjects[j].type, playersArray[i], playersArray[i - 1]);
-
-                    destroyObject(RandomObjects[j], j);
-                    j--;
-                }
-            }
-        }
-    }
-
-}
-
-function powerUp(scene, type, playerGet, playerOther) {
-
-    let objectTime = 0;
-    let player = playerGet;
-    switch (type) {
+function powerUpType(j1, j2, o, scene) {
+    switch (o.type) {
         case 'objeto_eliminador':
-            player = playerOther;
-            eliminatePowerUp(player);
-            objectTime = 0;
+            eliminatePowerUp(j2);
+            scene.time.addEvent({
+                delay: 0,
+                callback: () => stopPowerUp(j2, o),
+                loop: false
+            });
             break;
         case 'objeto_congelar':
-            player = playerOther;
-            freezePowerUp(player);
-            objectTime = 3000;
+            freezePowerUp(j2);
+            scene.time.addEvent({
+                delay: 3000,
+                callback: () => stopPowerUp(j2, o),
+                loop: false
+            });
             break;
         case 'objeto_inmortalidad':
-            player = playerGet;
-            inmortalPowerUp(player);
-            objectTime = 3000;
+            inmortalPowerUp(j1);
+            scene.time.addEvent({
+                delay: 3000,
+                callback: () => stopPowerUp(j1, o),
+                loop: false
+            });
             break;
         case 'objeto_traza':
-            player = playerGet;
-            trailPowerUp(player);
-            objectTime = 3000;
+            trailPowerUp(j1);
+            scene.time.addEvent({
+                delay: 3000,
+                callback: () => stopPowerUp(j1, o),
+                loop: false
+            });
             break;
         case 'objeto_velocidad':
-            player = playerGet;
-            speedPowerUp(player);
-            objectTime = 3000;
-            break;
+            speedPowerUp(j1);
+            scene.time.addEvent({
+                delay: 3000,
+                callback: () => stopPowerUp(j1, o),
+                loop: false
+            });
     }
-
-    if (objectTime != 0) {
-        scene.time.addEvent({
-            delay: objectTime,
-            callback: () => stopPowerUp(player, type),
-            loop: false
-        });
-    }
-
 }
 
 function eliminatePowerUp(player) {
@@ -145,23 +154,22 @@ function speedPowerUp(player) {
     player.fullNitro = true;
 }
 
-function stopPowerUp(player, type) {
+function stopPowerUp(player, object) {
 
-    if (type === 'objeto_congelar' || type === 'objeto_velocidad') {
+    if (object.type === 'objeto_congelar' || object.type === 'objeto_velocidad') {
         player.speed = 300;
         player.fullNitro = false;
     }
 
-    else if (type === 'objeto_inmortalidad') {
+    else if (object.type === 'objeto_inmortalidad') {
         player.inmortal = false;
     }
 
-    else if (type === 'objeto_traza') {
+    else if (object.type === 'objeto_traza') {
         player.trailMaxSize = 50;
         while (player.trail.length > player.trailMaxSize) {
             player.trail.shift();
         }
     }
-
 
 }

@@ -162,7 +162,7 @@ class Core extends Phaser.Scene {
             checkTrailCollisions(this, this.players[0], this.players[1]);
 
             // Comprobar colisiones entre motos y objetos
-            collisionPlayerObject(this, this.players);
+            //collisionPlayerObject(this, this.players);
         }
 
     }
