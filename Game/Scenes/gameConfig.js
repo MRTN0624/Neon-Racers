@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------
 // Configuración del motor
 const config = {
-    type: Phaser.CANVAS, // Elige WebGL si está disponible, si no Canvas
+    type: Phaser.CANVAS, // Se trata de un juego con pocos elementos y no utiliza cálculos gráficos.
     width: 800,
     height: 600,
     // Vinculas directamente la etiqueta HTML que ya creaste
@@ -21,7 +21,7 @@ const config = {
     arcade:{
      gravity: { y: 0 },  // Gravedad en píxeles, 0 para que las motos no caigan
             debug: false          // Mostrar contornos físicos
-}
+    }
 
         },
     scene: [LoadingScreen,MainMenu,Core,Settings,Credits,Help] //Unicamente definimos las escenas que tendrá
