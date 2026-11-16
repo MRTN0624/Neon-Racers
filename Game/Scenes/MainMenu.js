@@ -6,24 +6,21 @@ class MainMenu extends Phaser.Scene {
 
     // Inicialización de los elementos del menú principal
     create() {
-        //Se para la musica de victory 
-        
-       
-         this.sound.stopByKey('game_music');
-         this.sound.stopByKey('game_music2');
-         this.sound.stopByKey('game_music3');
-        // this.menuMusic = this.sound.add('musicMenu', {
-        //     loop: true,
-        //     volume: 0.5
-        // });
-        // this.menuMusic.play();
 
-        // Comprobamos si la música del menú ya existe y está sonando
-        if (!this.sound.get('musicMenu') || !this.sound.get('musicMenu').isPlaying) {
+        // Detener la música de las partidas
+        this.sound.stopByKey('game_music');
+        this.sound.stopByKey('game_music2');
+        this.sound.stopByKey('game_music3');
+
+        // Música del menú principal
+        if (!this.sound.get('musicMenu') ||
+            !this.sound.get('musicMenu').isPlaying) {
+
             this.menuMusic = this.sound.add('musicMenu', {
                 loop: true,
                 volume: 0.5
             });
+
             this.menuMusic.play();
         }
 
@@ -33,25 +30,23 @@ class MainMenu extends Phaser.Scene {
         const width = canvas.width;
         const height = canvas.height;
 
-        // 2. Background del menú
-        this.add.image(width / 2, height / 2, 'menuBackground')
-            .setDisplaySize(width, height);
+        // 2. Fondo del menú
+        this.add.image(
+            width / 2,
+            height / 2,
+            'menuBackground'
+        ).setDisplaySize(width, height);
 
         // 3. Opciones del menú
-        // - JUGAR
-        // - OPCIONES
-        // - CRÉDITOS
         const options = [
             'JUGAR',
             'OPCIONES',
             'AYUDA',
-            'CRÉDITOS',
-           // 'SALIR'
+            'CRÉDITOS'
         ];
 
         this.menuOptions = [];
 
-        // Posición inicial de las opciones
         const startY = height / 2 - 20;
         const spacing = 60;
 
@@ -66,13 +61,28 @@ class MainMenu extends Phaser.Scene {
                     color: '#ffffff',
                     fontStyle: 'bold'
                 }
-            ).setOrigin(0.5);
+            )
+            .setOrigin(0.5)
+            .setInteractive({
+                useHandCursor: true
+            });
+
+            // Seleccionar al pasar el ratón
+            text.on('pointerover', () => {
+                this.selectedOption = index;
+                this.updateMenuSelection();
+            });
+
+            // Ejecutar la opción al hacer clic
+            text.on('pointerdown', () => {
+                this.selectedOption = index;
+                this.executeSelectedOption();
+            });
 
             this.menuOptions.push(text);
         });
 
         // 4. Flecha de selección
-        // y la posicionaremos junto al botón seleccionado.
         this.selectedOption = 0;
 
         this.menuArrow = this.add.image(
@@ -81,36 +91,28 @@ class MainMenu extends Phaser.Scene {
             'menuArrow'
         ).setDisplaySize(40, 40);
 
-        // Aplicamos el resaltado inicial de la opción seleccionada
         this.updateMenuSelection();
 
-        // 5. NAVEGACIÓN POR EL MENÚ
+        // 5. Navegación por teclado
 
-        // Desplazamiento hacia arriba (Flecha UP / W)
-        this.input.keyboard.on('keydown-UP', () => {
-
-            this.selectedOption--;
-
-            if (this.selectedOption < 0) {
-                this.selectedOption = this.menuOptions.length - 1;
-            }
-
-            this.updateMenuSelection();
-        });
-
-        this.input.keyboard.on('keydown-W', () => {
+        // Subir con flecha arriba o W
+        const moveUp = () => {
 
             this.selectedOption--;
 
             if (this.selectedOption < 0) {
-                this.selectedOption = this.menuOptions.length - 1;
+                this.selectedOption =
+                    this.menuOptions.length - 1;
             }
 
             this.updateMenuSelection();
-        });
+        };
 
-        // Desplazamiento hacia abajo (Flecha DOWN / S)
-        this.input.keyboard.on('keydown-DOWN', () => {
+        this.input.keyboard.on('keydown-UP', moveUp);
+        this.input.keyboard.on('keydown-W', moveUp);
+
+        // Bajar con flecha abajo o S
+        const moveDown = () => {
 
             this.selectedOption++;
 
@@ -119,23 +121,24 @@ class MainMenu extends Phaser.Scene {
             }
 
             this.updateMenuSelection();
-        });
+        };
 
-        this.input.keyboard.on('keydown-S', () => {
+        this.input.keyboard.on('keydown-DOWN', moveDown);
+        this.input.keyboard.on('keydown-S', moveDown);
 
-            this.selectedOption++;
-
-            if (this.selectedOption >= this.menuOptions.length) {
-                this.selectedOption = 0;
-            }
-
-            this.updateMenuSelection();
-        });
-
-        // 6. CONFIRMACIÓN DE LA OPCIÓN SELECCIONADA
+        // Confirmar con ENTER
         this.input.keyboard.on('keydown-ENTER', () => {
+            this.executeSelectedOption();
+        });
 
-    switch (this.selectedOption) {
+        // Retirar la pantalla de carga
+        this.scene.stop('LoadingScreen');
+    }
+
+    // Ejecutar la opción seleccionada
+    executeSelectedOption() {
+
+        switch (this.selectedOption) {
 
             case 0: // JUGAR
                 this.scene.start('Core');
@@ -152,17 +155,7 @@ class MainMenu extends Phaser.Scene {
             case 3: // CRÉDITOS
                 this.scene.start('Credits');
                 break;
-
-            case 4: // SALIR
-            //    this.sound.stopByKey('musicMenu');
-            //  this.scene.stop();
-                break;
         }
-
-    });
-
-        // Cuando el menú esté preparado, retiramos LoadingScreen
-        this.scene.stop('LoadingScreen');
     }
 
     // Actualización visual de la opción seleccionada
@@ -176,10 +169,10 @@ class MainMenu extends Phaser.Scene {
             else {
                 option.setColor('#ffffff');
             }
-
         });
 
-        this.menuArrow.y = this.menuOptions[this.selectedOption].y;
+        // Mover la flecha a la opción seleccionada
+        this.menuArrow.y =
+            this.menuOptions[this.selectedOption].y;
     }
-
 }
