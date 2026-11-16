@@ -16,11 +16,11 @@ const config = {
     //     update: update,
 
         physics:{  //No todas las escenas tienen fisicas, pero physics es global y no se puede asignar a cada escena individual
- 
+
     default: 'arcade',
     arcade:{
      gravity: { y: 0 },  // Gravedad en píxeles, 0 para que las motos no caigan
-            debug: false          // Mostrar contornos físicos
+            debug: true          // Mostrar contornos físicos
     }
 
         },
@@ -35,7 +35,7 @@ const config = {
     ] //Unicamente definimos las escenas que tendrá
     //que arrancar el motor de juego y cada escena heredará de Phaser.Scene para tener las propiedades típicas
     //Javascript permite sobreescribir métodos heredados
-   
+
 };
 //--------------------------------------------------------------------------------
 

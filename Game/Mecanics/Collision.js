@@ -46,7 +46,7 @@ function checkPlayerTrailOverlap(player, otherPlayer) {
     const radius = Math.max(
         player.body.width,
         player.body.height
-    ) / 2 + 5;
+    ) / 2 + 4;
 
     // Recorremos los segmentos de la estela
     for (let i = 1; i < trail.length; i++) {
@@ -139,9 +139,9 @@ function resolveCollision(scene, player1, player2, collisionType) {
         }
     }
 
-    // 2. Moto 1 contra estela de moto 2
+    // 2. Moto 1 contra estela de moto 2 o pared
     // Muere únicamente moto 1
-    else if (collisionType === 'player1-trail2' && player1.inmortal === false) {
+    else if (collisionType === 'player1-trail2' || collisionType === 'player1-wall' && player1.inmortal === false) {
 
         player1.alive = false;
         createExplosion(scene, player1);
@@ -152,7 +152,7 @@ function resolveCollision(scene, player1, player2, collisionType) {
 
     // 3. Moto 2 contra estela de moto 1
     // Muere únicamente moto 2
-    else if (collisionType === 'player2-trail1' && player2.inmortal === false) {
+    else if (collisionType === 'player2-trail1' || collisionType === 'player2-wall' && player2.inmortal === false) {
 
         player2.alive = false;
         createExplosion(scene, player2);

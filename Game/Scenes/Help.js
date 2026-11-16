@@ -26,7 +26,7 @@ class Help extends Phaser.Scene {
             {
                 fontSize: '42px',
                 color: '#00ffff',
-                fontStyle: 'bold'
+                fontFamily: 'PixelFont',
             }
         ).setOrigin(0.5);
 
@@ -38,7 +38,7 @@ class Help extends Phaser.Scene {
             {
                 fontSize: '26px',
                 color: '#ffffff',
-                fontStyle: 'bold'
+                fontFamily: 'PixelFont',
             }
         ).setOrigin(0.5);
 
@@ -50,7 +50,7 @@ class Help extends Phaser.Scene {
             {
                 fontSize: '20px',
                 color: '#00ffff',
-                fontStyle: 'bold'
+                fontFamily: 'PixelFont',
             }
         ).setOrigin(0.5);
 
@@ -60,7 +60,8 @@ class Help extends Phaser.Scene {
             'Evita las colisiones y sobrevive a tu rival.',
             {
                 fontSize: '16px',
-                color: '#ffffff'
+                color: '#ffffff',
+                fontFamily: 'PixelFont'
             }
         ).setOrigin(0.5);
 
@@ -72,7 +73,7 @@ class Help extends Phaser.Scene {
             {
                 fontSize: '20px',
                 color: '#00ffff',
-                fontStyle: 'bold'
+                fontFamily: 'PixelFont',
             }
         ).setOrigin(0.5);
 
@@ -85,7 +86,8 @@ class Help extends Phaser.Scene {
                 fontSize: '16px',
                 color: '#ffffff',
                 align: 'center',
-                lineSpacing: 5
+                lineSpacing: 5,
+                fontFamily: 'PixelFont',
             }
         ).setOrigin(0.5);
 
@@ -98,7 +100,8 @@ class Help extends Phaser.Scene {
                 fontSize: '16px',
                 color: '#ffffff',
                 align: 'center',
-                lineSpacing: 5
+                lineSpacing: 5,
+                fontFamily: 'PixelFont',
             }
         ).setOrigin(0.5);
 
@@ -110,7 +113,7 @@ class Help extends Phaser.Scene {
             {
                 fontSize: '20px',
                 color: '#00ffff',
-                fontStyle: 'bold'
+                fontFamily: 'PixelFont',
             }
         ).setOrigin(0.5);
 
@@ -156,27 +159,39 @@ class Help extends Phaser.Scene {
                 potenciador.descripcion,
                 {
                     fontSize: '15px',
-                    color: '#ffffff'
+                    color: '#ffffff',
+                    fontFamily: 'PixelFont',
                 }
             ).setOrigin(0, 0.5);
         });
 
         // 8. Instrucción para volver al menú
-        this.add.text(
+        const text = this.add.text(
             width / 2,
             height - 40,
             'PULSA ESC PARA VOLVER',
             {
                 fontSize: '16px',
-                color: '#00ffff'
+                color: '#00ffff',
+                fontFamily: 'PixelFont',
             }
-        ).setOrigin(0.5);
+        ).setOrigin(0.5)
+        .setInteractive({ useHandCursor: true });
+
+        // Eventos de ratón para el texto de volver al menú
+        text.on('pointerdown', () => this.scene.start('MainMenu'));
+        text.on('pointerover', () => {
+            text.setColor('#ffffff');
+            text.setScale(1.05);
+        });
+        text.on('pointerout', () => {
+            text.setColor('#00ffff');
+            text.setScale(1);
+        });
 
         // 9. Configuración del teclado
         this.input.keyboard.on('keydown-ESC', () => {
-
             this.scene.start('MainMenu');
-
         });
     }
 }

@@ -7,6 +7,9 @@ class Core extends Phaser.Scene {
 
     // Inicialización y pintado inicial de objetos
     create() {
+
+        RandomObjects = []; //al reiniciar la escena reiniciamos el array
+
         this.sound.stopByKey('musicMenu');
         const maps = {
 
@@ -166,6 +169,17 @@ class Core extends Phaser.Scene {
         // y el quinto parámetro se refiere a la escena
         //Cuando phaser llame a tu funcion, dentro de la funcion this, sera la escena
 
+        this.physics.world.on('worldbounds', (body) => {
+            if (this.gameOverTriggered) return;
+
+            if (body.gameObject === this.players[0]) {
+                resolveCollision(this, this.players[0], this.players[1], 'player1-wall');
+            } 
+            else if (body.gameObject === this.players[1]) {
+                resolveCollision(this, this.players[0], this.players[1], 'player2-wall');
+            }
+        });
+
         //Instanciacion e inicialización de la música
 
         this.gameplayMusic = this.sound.add(mapConfig.music, {
@@ -175,7 +189,7 @@ class Core extends Phaser.Scene {
 
         this.gameOverMusic = this.sound.add('musicVictory', {
             loop: true,
-            volume: 0.5
+            volume: 0.05
         });
 
         this.gameplayMusic.play();
@@ -251,17 +265,21 @@ function updatePlayer(player, delta) {
     if (player.controls.left.isDown) {
         player.angle = -90;
         player.direction = 'left';
+        player.body.setSize(1300, 500, true); //Si se puede cambiar la hitbox si cambias de direccion
     } else if (player.controls.right.isDown) {
         player.angle = 90;
         player.direction = 'right';
+        player.body.setSize(1300, 500, true);
     }
 
     if (player.controls.up.isDown) {
         player.angle = 0;
         player.direction = 'up';
+        player.body.setSize(500 ,1300, true);
     } else if (player.controls.down.isDown) {
         player.angle = 180;
         player.direction = 'down';
+        player.body.setSize(500 ,1300, true);
     }
 
     // --- 3. MOVIMIENTO FÍSICO / POSICIÓN ---
@@ -301,7 +319,7 @@ function createPlayer(scene, x, y, key, startAngle, controls, trailColor, trailG
     //const player = scene.add.image(x, y, key); Sin físicas
     const player = scene.physics.add.image(x, y, key); //Añadir físicas
     player.setScale(0.05);
-    player.body.setSize(800,1100,true);
+    player.body.setSize(500,1300,true); //Esta exacto para que ocupe la moto no lo cambieis porfa 
     player.direction = 'none';
     player.angle = startAngle;
     player.setDepth(1);
@@ -309,19 +327,20 @@ function createPlayer(scene, x, y, key, startAngle, controls, trailColor, trailG
     // Propiedades del jugador
     player.speed = 300;
     player.controls = controls; // Mapeo de controles pasados como objeto
-    player.fullNitro = false; // Control del poder de velocidad
+    //player.fullNitro = false; // Control del poder de velocidad
     player.inmortal = false; // Control del poder de inmortalidad
 
     // Estela de movimiento
     player.trailGraphics = scene.add.graphics();
     player.trailGraphics.setDepth(0);
     player.trail = [];
-    player.trailMaxSize = 50; //Control del poder de traza aumentada
+    player.trailMaxSize = 200; //Control del poder de traza aumentada
     player.trailColor = trailColor;         // Color capa base
     player.trailGlowColor = trailGlowColor; // Color capa brillo
 
     //Físicas
     player.setCollideWorldBounds(true); //Por defecto toma los bordes del canvas
+    player.body.onWorldBounds = true; //Esta linea sirve para avisar de que el jugador a tocado los bordes del mapa
     //Pero nosotros lo hemos definido en create
     player.alive = true; //Para Collision
 

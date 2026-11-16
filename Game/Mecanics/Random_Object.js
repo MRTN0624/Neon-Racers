@@ -36,73 +36,49 @@ function RandomObjectGenerator(scene) {
     }
 }
 
-function destroyObject(object, index) {
-    object.destroy();
-    RandomObjects.splice(index, 1);
+function destroyObject(object, index) { 
+    if (object && object.active) { //compruebo que el objeto existe 
+        object.destroy();
+    }
+    if (index > -1) { //Solo lo saco del array si realmente existe en él
+        RandomObjects.splice(index, 1);
+    }
 }
 
 
 function createObject(scene, x, y, key) {
     let object = scene.physics.add.image(x, y, key);
     object.setScale(0.18);
-
-    object.x = x;
-    object.y = y;
     object.type = key;
 
-    scene.physics.add.overlap(scene.players[0], object, (j1, j2, o) => {
-        j1 = scene.players[0];
-        j2 = scene.players[1];
-        o = object;
+    const recogerObjeto = (j1, j2) => { //En vez de hacerlo por separado lo hacemos para los dos.
+        if (!object.active) return; //Si el objeto ya ha sido recogido, no hacemos nada
+        const tipoGuardado = object.type;
+        destroyObject(object, RandomObjects.indexOf(object));
+        powerUpType(j1, j2, tipoGuardado, scene);
+    };
 
-        powerUpType(j1, j2, o, scene);
-
-        object.destroy();
-
-        for (let j = 0; j < RandomObjects.length; j++) {
-            if (RandomObjects[j] === null) {
-                RandomObjects.splice(j, 1);
-            }
-        }
-
-
+    scene.physics.add.overlap(scene.players[0], object, () => {
+        recogerObjeto(scene.players[0], scene.players[1]);
     });
 
-    scene.physics.add.overlap(scene.players[1], object, (j1, j2, o) => {
-        j1 = scene.players[1];
-        j2 = scene.players[0];
-        o = object;
-
-        powerUpType(j1, j2, o, scene);
-
-        object.destroy();
-
-        for (let j = 0; j < RandomObjects.length; j++) {
-            if (RandomObjects[j] == null) {
-                RandomObjects.splice(j, 1);
-            }
-        }
-
+    scene.physics.add.overlap(scene.players[1], object, () => {
+        recogerObjeto(scene.players[1], scene.players[0]);
     });
 
     return object;
 }
 
-function powerUpType(j1, j2, o, scene) {
-    switch (o.type) {
+function powerUpType(j1, j2, type, scene) {
+    switch (type) {
         case 'objeto_eliminador':
             eliminatePowerUp(j2);
-            scene.time.addEvent({
-                delay: 0,
-                callback: () => stopPowerUp(j2, o),
-                loop: false
-            });
             break;
         case 'objeto_congelar':
             freezePowerUp(j2);
             scene.time.addEvent({
                 delay: 3000,
-                callback: () => stopPowerUp(j2, o),
+                callback: () => stopPowerUp(j2, type),
                 loop: false
             });
             break;
@@ -110,15 +86,16 @@ function powerUpType(j1, j2, o, scene) {
             inmortalPowerUp(j1);
             scene.time.addEvent({
                 delay: 3000,
-                callback: () => stopPowerUp(j1, o),
+                callback: () => stopPowerUp(j1, type),
                 loop: false
             });
             break;
         case 'objeto_traza':
-            trailPowerUp(j1);
+            const baseTrail = j1.trailMaxSize;
+            trailPowerUp(j1, baseTrail);
             scene.time.addEvent({
                 delay: 3000,
-                callback: () => stopPowerUp(j1, o),
+                callback: () => stopPowerUp(j1, type, baseTrail),
                 loop: false
             });
             break;
@@ -126,9 +103,10 @@ function powerUpType(j1, j2, o, scene) {
             speedPowerUp(j1);
             scene.time.addEvent({
                 delay: 3000,
-                callback: () => stopPowerUp(j1, o),
+                callback: () => stopPowerUp(j1, type),
                 loop: false
             });
+            break;
     }
 }
 
@@ -138,38 +116,36 @@ function eliminatePowerUp(player) {
 
 function freezePowerUp(player) {
     player.speed = 0;
-    player.fullNitro = true;
+    //player.fullNitro = true; No existe el nitro como mecanica es un powerup
 }
 
 function inmortalPowerUp(player) {
     player.inmortal = true;
 }
 
-function trailPowerUp(player) {
-    player.trailMaxSize = 75;
+function trailPowerUp(player, baseTrail) {
+    player.trailMaxSize = Math.round(baseTrail * 1.5); //Para que sea variable dependiendo del tamaño que le hayas dado
 }
 
 function speedPowerUp(player) {
     player.speed = 600;
-    player.fullNitro = true;
+    //player.fullNitro = true;
 }
 
-function stopPowerUp(player, object) {
+function stopPowerUp(player, type, baseTrail = 50) {
+    if (!player || !player.alive) return;
 
-    if (object.type === 'objeto_congelar' || object.type === 'objeto_velocidad') {
+    if (type === 'objeto_congelar' || type === 'objeto_velocidad') {
         player.speed = 300;
-        player.fullNitro = false;
+        //player.fullNitro = false;
     }
-
-    else if (object.type === 'objeto_inmortalidad') {
+    else if (type === 'objeto_inmortalidad') {
         player.inmortal = false;
     }
-
-    else if (object.type === 'objeto_traza') {
-        player.trailMaxSize = 50;
+    else if (type === 'objeto_traza') {
+        player.trailMaxSize = baseTrail;
         while (player.trail.length > player.trailMaxSize) {
             player.trail.shift();
         }
     }
-
 }

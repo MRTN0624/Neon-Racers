@@ -12,7 +12,6 @@
 function showGameOver(scene, player1, player2) {
 
     // Reproducimos la música de victoria
-    scene.gameOverMusic.setVolume(0.5);
     scene.gameOverMusic.play();
 
     let result;
@@ -28,32 +27,63 @@ function showGameOver(scene, player1, player2) {
     }
 
     // Mostramos el resultado
-    scene.add.text(400, 300, result, {
+    scene.add.text(400, 260, result, {
         fontSize: '32px',
         color: '#ffffff',
-        fontStyle: 'bold'
+        fontFamily: 'PixelFont',
     }).setOrigin(0.5).setDepth(20);
 
-    // Instrucción para volver al menú
-    scene.add.text(
-        800 / 2,
-        600 - 60,
-        'PULSA ESC PARA VOLVER',
-        {
-            fontSize: '16px',
-            color: '#00ffff'
-        }
-    ).setOrigin(0.5);
+    let transitioning = false;
 
-    // Volver al menú principal al pulsar ESC
-    scene.input.keyboard.once('keydown-ESC', () => {
+    const reiniciarPartida = () => {
+        if (transitioning) return;
+        transitioning = true;
+        fadeOutVictoryMusic(scene, () => scene.scene.restart());
+    };
 
-        // Desvanecemos la música de victoria antes de cambiar de escena
-        fadeOutVictoryMusic(scene, () => {
-            scene.scene.start('MainMenu');
-        });
+    const volverAlMenu = () => {
+        if (transitioning) return;
+        transitioning = true;
+        fadeOutVictoryMusic(scene, () => scene.scene.start('MainMenu'));
+    };
 
+    
+    const btnRestart = scene.add.text(400, 600 - 120, 'VOLVER A JUGAR (ENTER)', {
+        fontSize: '20px',
+        color: '#F5C518',
+        fontFamily: 'PixelFont',
+    }).setOrigin(0.5).setDepth(20).setInteractive({ useHandCursor: true });
+
+    btnRestart.on('pointerover', () => {
+        btnRestart.setColor('#ffffff');
+        btnRestart.setScale(1.05);
     });
+    btnRestart.on('pointerout', () => {
+        btnRestart.setColor('#F5C518');
+        btnRestart.setScale(1);
+    });
+    btnRestart.on('pointerdown', reiniciarPartida);
+
+    // Instrucción para volver al menú
+    const btnMenu = scene.add.text(800 / 2, 600 - 60, 'VOLVER AL MENÚ (ESC)', {
+        fontSize: '16px',
+        color: '#00A3E0',
+        fontFamily: 'PixelFont',
+    }).setOrigin(0.5).setDepth(20).setInteractive({ useHandCursor: true });
+
+    btnMenu.on('pointerover', () => {
+        btnMenu.setColor('#ffffff');
+        btnMenu.setScale(1.05);
+    });
+    btnMenu.on('pointerout', () => {
+        btnMenu.setColor('#00A3E0');
+        btnMenu.setScale(1);
+    });
+    btnMenu.on('pointerdown', volverAlMenu);
+
+    // Volver al menú principal al pulsar ESC y reiniciar la partida al pulsar ENTER
+    scene.input.keyboard.once('keydown-ENTER', reiniciarPartida);
+    scene.input.keyboard.once('keydown-ESC', volverAlMenu);
 }
 
 

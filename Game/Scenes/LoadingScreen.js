@@ -7,7 +7,7 @@ class LoadingScreen extends Phaser.Scene {
 
     // Carga de recursos y configuración de la pantalla de carga
     preload() {
-         console.log("LoadingScreen: preload");
+        console.log("LoadingScreen: preload");
         // 1. Configuración visual de la pantalla
         // Obtener el canvas del HTML
         const canvas = document.getElementById('gameCanvas');
@@ -17,10 +17,10 @@ class LoadingScreen extends Phaser.Scene {
         const height = canvas.height;
 
         // Título
-        this.add.text(width / 2, height / 2 - 80, 'NEON RACERS', {
+        const titleText = this.add.text(width / 2, height / 2 - 80, 'NEON RACERS', {
             fontSize: '38px',
             color: '#00ffff',
-            fontStyle: 'bold'
+            fontFamily: 'PixelFont'
         }).setOrigin(0.5);
 
         // Texto de carga
@@ -30,7 +30,8 @@ class LoadingScreen extends Phaser.Scene {
             'CARGANDO...',
             {
                 fontSize: '16px',
-                color: '#ffffff'
+                color: '#ffffff',
+                fontFamily: 'PixelFont'
             }
         ).setOrigin(0.5);
 
@@ -57,9 +58,22 @@ class LoadingScreen extends Phaser.Scene {
             '0%',
             {
                 fontSize: '16px',
-                color: '#00ffff'
+                color: '#00ffff',
+                fontFamily: 'PixelFont'
             }
         ).setOrigin(0.5);
+
+        // Cargar fuente y actualizar los textos de esta pantalla en vivo
+        const font = new FontFace('PixelFont', 'url(Fonts/Minecraft.ttf)');
+        font.load().then((loadedFont) => {
+            document.fonts.add(loadedFont);
+
+            // Pasar primero por 'sans-serif' obliga a Phaser a redibujar el texto 
+            [titleText, loadingText, percentText].forEach((txt) => {
+                txt.setFontFamily('sans-serif');
+                txt.setFontFamily('PixelFont');
+            });
+        }).catch((error) => console.error("Error al cargar PixelFont:", error));
 
         // 3. Evento que actualiza la barra según el progreso real
         this.load.on('progress', (value) => {
@@ -119,8 +133,13 @@ class LoadingScreen extends Phaser.Scene {
     }
 
     // Cuando termina la carga, iniciamos MainMenu en paralelo
-    create() {
-         console.log("LoadingScreen: create");
+    async create() {
+        console.log("LoadingScreen: create");
+
+        await document.fonts.ready;
+        
+        this.sound.volume = 0.5; //Esta muy alto si no al principio.
+        
         this.scene.launch('MainMenu');
 
         // Nos aseguramos de que LoadingScreen siga por encima

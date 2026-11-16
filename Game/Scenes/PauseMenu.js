@@ -18,10 +18,9 @@ class PauseMenu extends Phaser.Scene {
 
         // Título
         this.add.text(400, 145, 'PARTIDA EN PAUSA', {
-            fontFamily: 'Arial',
+            fontFamily: 'PixelFont',
             fontSize: '38px',
             color: '#00ffff',
-            fontStyle: 'bold',
             stroke: '#003b66',
             strokeThickness: 4
         }).setOrigin(0.5);
@@ -49,7 +48,7 @@ class PauseMenu extends Phaser.Scene {
                 265 + index * 75,
                 option.label,
                 {
-                    fontFamily: 'Arial',
+                    fontFamily: 'PixelFont',
                     fontSize: '26px',
                     color: '#ffffff',
                     backgroundColor: '#14213d',
@@ -61,10 +60,12 @@ class PauseMenu extends Phaser.Scene {
 
             text.on('pointerover', () => {
                 text.setColor('#00ffff');
+                text.setScale(1.05);
             });
 
             text.on('pointerout', () => {
                 text.setColor('#ffffff');
+                text.setScale(1);
             });
 
             text.on('pointerdown', option.action);
@@ -72,7 +73,7 @@ class PauseMenu extends Phaser.Scene {
 
         // Instrucciones de los dos jugadores
         this.add.text(400, 530, 'Q / P: CONTINUAR', {
-            fontFamily: 'Arial',
+            fontFamily: 'PixelFont',
             fontSize: '17px',
             color: '#ff66ff'
         }).setOrigin(0.5);

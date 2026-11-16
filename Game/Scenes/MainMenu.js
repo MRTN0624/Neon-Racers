@@ -5,7 +5,7 @@ class MainMenu extends Phaser.Scene {
     }
 
     // Inicialización de los elementos del menú principal
-    create() {
+        create() {
 
         // Detener la música de las partidas
         this.sound.stopByKey('game_music');
@@ -39,7 +39,8 @@ class MainMenu extends Phaser.Scene {
 
         // 3. Opciones del menú
         const options = [
-            'JUGAR',
+            'JUGAR LOCAL',
+            'JUGAR EN LÍNEA',
             'OPCIONES',
             'AYUDA',
             'CRÉDITOS'
@@ -57,9 +58,9 @@ class MainMenu extends Phaser.Scene {
                 startY + index * spacing,
                 option,
                 {
-                    fontSize: '28px',
+                    fontSize: '24px',
                     color: '#ffffff',
-                    fontStyle: 'bold'
+                    fontFamily: 'PixelFont',
                 }
             )
             .setOrigin(0.5)
@@ -140,19 +141,23 @@ class MainMenu extends Phaser.Scene {
 
         switch (this.selectedOption) {
 
-            case 0: // JUGAR
+            case 0: // JUGAR LOCAL
                 this.scene.start('Core');
                 break;
+            
+            case 1: // JUGAR EN LÍNEA
+                this.scene.start('Core'); //Por implementar !!!
+                break;
 
-            case 1: // OPCIONES
+            case 2: // OPCIONES
                 this.scene.start('Settings');
                 break;
 
-            case 2: // AYUDA
+            case 3: // AYUDA
                 this.scene.start('Help');
                 break;
 
-            case 3: // CRÉDITOS
+            case 4: // CRÉDITOS
                 this.scene.start('Credits');
                 break;
         }
@@ -165,9 +170,11 @@ class MainMenu extends Phaser.Scene {
 
             if (index === this.selectedOption) {
                 option.setColor('#00ffff');
+                option.setScale(1.08);
             }
             else {
                 option.setColor('#ffffff');
+                option.setScale(1);
             }
         });
 

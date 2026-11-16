@@ -25,7 +25,7 @@ class Credits extends Phaser.Scene {
             {
                 fontSize: '42px',
                 color: '#00ffff',
-                fontStyle: 'bold'
+                fontFamily: 'PixelFont',
             }
         ).setOrigin(0.5);
 
@@ -37,7 +37,7 @@ class Credits extends Phaser.Scene {
             {
                 fontSize: '26px',
                 color: '#ffffff',
-                fontStyle: 'bold'
+                fontFamily: 'PixelFont',
             }
         ).setOrigin(0.5);
 
@@ -50,20 +50,34 @@ class Credits extends Phaser.Scene {
                 fontSize: '20px',
                 color: '#ffffff',
                 align: 'center',
-                lineSpacing: 8
+                lineSpacing: 8,
+                fontFamily: 'PixelFont',
             }
         ).setOrigin(0.5);
 
         // 6. Instrucción para volver al menú
-        this.add.text(
+        const text = this.add.text(
             width / 2,
             height - 60,
             'PULSA ESC PARA VOLVER',
             {
                 fontSize: '16px',
-                color: '#00ffff'
+                color: '#00ffff',
+                fontFamily: 'PixelFont'
             }
-        ).setOrigin(0.5);
+        )
+        .setOrigin(0.5)
+        .setInteractive({ useHandCursor: true });
+
+        text.on('pointerdown', () => this.scene.start('MainMenu'));
+        text.on('pointerover', () => {
+            text.setColor('#ffffff');
+            text.setScale(1.05);
+        });
+        text.on('pointerout', () => {
+            text.setColor('#00ffff');
+            text.setScale(1);
+        });
 
         // 7. Configuración del teclado
         this.input.keyboard.on('keydown-ESC', () => {
