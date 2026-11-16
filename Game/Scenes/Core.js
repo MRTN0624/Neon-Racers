@@ -109,6 +109,45 @@ class Core extends Phaser.Scene {
 
         this.gameOverTriggered = false;  //Ha saltado el game_over?
 
+        
+        
+        
+        // SISTEMA DE PAUSA PARA DOS JUGADORES
+
+        const pauseGame = (event) => {
+
+            // Evitar que mantener pulsada una tecla
+            // provoque varias pausas consecutivas
+            if (event.repeat) {
+                return;
+            }
+
+            // No pausar si la carrera ha terminado
+            if (this.gameOverTriggered) {
+                return;
+            }
+
+            // Evitar abrir dos menús de pausa
+            if (this.scene.isActive('PauseMenu')) {
+                return;
+            }
+
+            // Pausar toda la partida
+            this.scene.pause();
+
+            // Lanzar el menú de pausa
+            this.scene.launch('PauseMenu');
+
+            // Mostrar el menú por encima del juego
+            this.scene.bringToTop('PauseMenu');
+        };
+
+        // JUGADOR 1: tecla Q
+        this.input.keyboard.on('keydown-Q', pauseGame);
+
+        // JUGADOR 2: tecla P
+        this.input.keyboard.on('keydown-P', pauseGame);
+
         this.physics.add.overlap(  //Asi phaser buscará detectar si hay superposición espacial.
             this.players[0], //Primera moto
             this.players[1], //Segunda moto
