@@ -7,7 +7,7 @@ class MainMenu extends Phaser.Scene {
     // Inicialización de los elementos del menú principal
         create() {
         
-        this.sound.stopAll(); //Si no pones este stop si estas en ayuda y vuelves al menu, se solapan las canciones y suena todo a la vez.
+        //this.sound.stopAll(); //Si no pones este stop si estas en ayuda y vuelves al menu, se solapan las canciones y suena todo a la vez.
 
         // Detener la música de las partidas
         this.sound.stopByKey('game_music');
