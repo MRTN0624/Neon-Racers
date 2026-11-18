@@ -15,20 +15,29 @@ class MainMenu extends Phaser.Scene {
         this.sound.stopByKey('game_music3');
 
         // Música del menú principal
-        if (!this.sound.get('musicMenu') ||
-            !this.sound.get('musicMenu').isPlaying) {
+        // if (!this.sound.get('musicMenu') ||
+        //     !this.sound.get('musicMenu').isPlaying) {
 
-            this.menuMusic = this.sound.add('musicMenu', {
-                loop: true,
-                volume: 0.5
-            });
+        //     this.menuMusic = this.sound.add('musicMenu', {
+        //         loop: true,
+        //         volume: 0.5
+        //     });
 
+        //     this.menuMusic.play();
+        // }
+        // else { this.menuMusic = existingMusic;
+        //     if (!this.menuMusic.isPlaying) {
+        //         this.menuMusic.play();
+        //     }
+        // }
+
+        const menuTracks = this.sound.getAll('musicMenu'); //Coges todas las instancias de sonido las guardas en un array
+        const isAlreadyPlaying = menuTracks.some(track => track.isPlaying); //Devuelve true si al menos una de las pistas esta sonando
+
+        if (!isAlreadyPlaying) { //Si no suena nada se reproduce la musica del menu
+            this.sound.removeByKey('musicMenu');
+            this.menuMusic = this.sound.add('musicMenu', { loop: true });
             this.menuMusic.play();
-        }
-        else { this.menuMusic = existingMusic;
-            if (!this.menuMusic.isPlaying) {
-                this.menuMusic.play();
-            }
         }
 
         // 1. Configuración visual de la escena
