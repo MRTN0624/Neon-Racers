@@ -48,7 +48,10 @@ function destroyObject(object, index) {
 
 function createObject(scene, x, y, key) {
     let object = scene.physics.add.image(x, y, key);
-    object.setScale(0.18);
+    
+    object.setDisplaySize(32, 32); //Miden justamente 32x32, y actualiza su hitbox
+    object.body.updateFromGameObject();
+
     object.type = key;
 
     const recogerObjeto = (j1, j2) => { //En vez de hacerlo por separado lo hacemos para los dos.
@@ -75,7 +78,7 @@ function powerUpType(j1, j2, type, scene) {
             eliminatePowerUp(j2);
             break;
         case 'objeto_congelar':
-            freezePowerUp(j2);
+            freezePowerUp(j2, scene);
             scene.time.addEvent({
                 delay: 3000,
                 callback: () => stopPowerUp(j2, type),
@@ -83,7 +86,7 @@ function powerUpType(j1, j2, type, scene) {
             });
             break;
         case 'objeto_inmortalidad':
-            inmortalPowerUp(j1);
+            inmortalPowerUp(j1, scene);
             scene.time.addEvent({
                 delay: 3000,
                 callback: () => stopPowerUp(j1, type),
@@ -114,13 +117,27 @@ function eliminatePowerUp(player) {
     player.trail.length = 0;
 }
 
-function freezePowerUp(player) {
+function freezePowerUp(player, scene) {
     player.speed = 0;
+    if (!player.freezeFilter) {
+        player.freezeFilter = scene.add.rectangle(player.x, player.y, 42, 42, 0x00E5FF, 0.5);
+        player.freezeFilter.setDepth(5); //Para que aparezca por encima
     //player.fullNitro = true; No existe el nitro como mecanica es un powerup
+    }
 }
 
-function inmortalPowerUp(player) {
+function inmortalPowerUp(player, scene) {
     player.inmortal = true;
+
+    if (!player.inmortalEffect) {
+        player.inmortalEffect = scene.tweens.add({ //Parpadeo con su duracion y alpha y yoyo infinitamente.
+            targets: player,
+            alpha: 0.3,
+            duration: 100,
+            yoyo: true,
+            repeat: -1
+        });
+    }
 }
 
 function trailPowerUp(player, baseTrail) {
@@ -137,10 +154,19 @@ function stopPowerUp(player, type, baseTrail = 50) {
 
     if (type === 'objeto_congelar' || type === 'objeto_velocidad') {
         player.speed = 300;
+            if (player.freezeFilter) {
+            player.freezeFilter.destroy();
+            player.freezeFilter = null;
+        }
         //player.fullNitro = false;
     }
     else if (type === 'objeto_inmortalidad') {
         player.inmortal = false;
+        if (player.inmortalEffect) {
+            player.inmortalEffect.stop();
+            player.inmortalEffect = null;
+        }
+        player.setAlpha(1);
     }
     else if (type === 'objeto_traza') {
         player.trailMaxSize = baseTrail;

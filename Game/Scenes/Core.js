@@ -104,9 +104,9 @@ class Core extends Phaser.Scene {
 
         this.players = [ //ARRAY DE PLAYERS
 
-            createPlayer(this, 115, 520, 'player1', 0, controlsPlayer1, 0x990000, 0xFF3333),
+            createPlayer(this, 115, 520, 'player1', 'none', 0, controlsPlayer1, 0x990000, 0xFF3333),
 
-            createPlayer(this, 685, 80, 'player2', 180, controlsPlayer2, 0x000099, 0x3333FF)
+            createPlayer(this, 685, 80, 'player2', 'none', 180, controlsPlayer2, 0x000099, 0x3333FF)
 
         ];
 
@@ -228,11 +228,20 @@ function updatePlayer(player, delta) {
     const deltaSec = delta / 1000;
 
     // --- 1. LÓGICA DE ESTELA (TRAIL) ---
-    player.trail.push({ x: player.x, y: player.y });
+    if (player.direction != 'none' && player.speed > 0) { 
+        //Si el jugador no tiene direccion o no esta congelado 
+        const lastPoint = player.trail[player.trail.length - 1];
 
-    if (player.trail.length > player.trailMaxSize) {
-        player.trail.shift();
+        if (!lastPoint || lastPoint.x !== player.x || lastPoint.y !== player.y) { 
+            //Comprueba si existe, un punto previo o la moto se ha movido en cualquiera de los ejes.
+            player.trail.push({ x: player.x, y: player.y });
+        }
+
+        if (player.trail.length > player.trailMaxSize) {
+            player.trail.shift();
+        }
     }
+    
 
     player.trailGraphics.clear();
 
@@ -261,25 +270,27 @@ function updatePlayer(player, delta) {
         player.trailGraphics.strokePath();
     }
 
-    // --- 2. ENTRADA DE CONTROLES (DIRECCIÓN) ---
-    if (player.controls.left.isDown) {
+    // --- 2. ENTRADA DE CONTROLES (DIRECCIÓN) ---       
+    if (player.speed > 0) {  //Si el jugador esta congelado no puede hacer nada
+    if (player.controls.left.isDown && player.direction != 'right') { //El jugador no puede girar 180º
         player.angle = -90;
         player.direction = 'left';
-        player.body.setSize(1300, 500, true); //Si se puede cambiar la hitbox si cambias de direccion
-    } else if (player.controls.right.isDown) {
+        player.body.setSize(1200, 400, true); //Si se puede cambiar la hitbox si cambias de direccion
+    } else if (player.controls.right.isDown && player.direction != 'left') {
         player.angle = 90;
         player.direction = 'right';
-        player.body.setSize(1300, 500, true);
+        player.body.setSize(1200, 400, true);
     }
 
-    if (player.controls.up.isDown) {
+    if (player.controls.up.isDown && player.direction != 'down') {
         player.angle = 0;
         player.direction = 'up';
-        player.body.setSize(500 ,1300, true);
-    } else if (player.controls.down.isDown) {
+        player.body.setSize(400 ,1200, true);
+    } else if (player.controls.down.isDown && player.direction != 'up') {
         player.angle = 180;
         player.direction = 'down';
-        player.body.setSize(500 ,1300, true);
+        player.body.setSize(400 ,1200, true);
+    }
     }
 
     // --- 3. MOVIMIENTO FÍSICO / POSICIÓN ---
@@ -315,12 +326,12 @@ function fadeOutMusic(scene) {
     });
 }
 
-function createPlayer(scene, x, y, key, startAngle, controls, trailColor, trailGlowColor) {
+function createPlayer(scene, x, y, key, startDirection, startAngle, controls, trailColor, trailGlowColor) {
     //const player = scene.add.image(x, y, key); Sin físicas
     const player = scene.physics.add.image(x, y, key); //Añadir físicas
     player.setScale(0.05);
-    player.body.setSize(500,1300,true); //Esta exacto para que ocupe la moto no lo cambieis porfa 
-    player.direction = 'none';
+    player.body.setSize(400,1200,true); //Esta exacto para que ocupe la moto no lo cambieis porfa 
+    player.direction = startDirection;
     player.angle = startAngle;
     player.setDepth(1);
 
@@ -334,7 +345,7 @@ function createPlayer(scene, x, y, key, startAngle, controls, trailColor, trailG
     player.trailGraphics = scene.add.graphics();
     player.trailGraphics.setDepth(0);
     player.trail = [];
-    player.trailMaxSize = 200; //Control del poder de traza aumentada
+    player.trailMaxSize = 350; //Control del poder de traza aumentada
     player.trailColor = trailColor;         // Color capa base
     player.trailGlowColor = trailGlowColor; // Color capa brillo
 

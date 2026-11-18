@@ -19,15 +19,15 @@ function checkTrailCollisions(scene, player1, player2) {
     // Si la partida ya ha terminado, no comprobamos más colisiones
     if (scene.gameOverTriggered) return;
 
-    // 1. Moto 1 contra estela de moto 2
-    if (checkPlayerTrailOverlap(player1, player2)) {
+    // 1. Moto 1 contra estela de moto 2 o contra su propia estela
+    if (checkPlayerTrailOverlap(player1, player2) || checkSelfTrailOverlap(player1)) {
 
         resolveCollision(scene, player1, player2, 'player1-trail2');
         return;
     }
 
-    // 2. Moto 2 contra estela de moto 1
-    if (checkPlayerTrailOverlap(player2, player1)) {
+    // 2. Moto 2 contra estela de moto 1 o contra su propia estela
+    if (checkPlayerTrailOverlap(player2, player1) || checkSelfTrailOverlap(player2)) {
 
         resolveCollision(scene, player1, player2, 'player2-trail1');
         return;
@@ -50,6 +50,32 @@ function checkPlayerTrailOverlap(player, otherPlayer) {
 
     // Recorremos los segmentos de la estela
     for (let i = 1; i < trail.length; i++) {
+
+        const start = trail[i - 1];
+        const end = trail[i];
+
+        if (distanceToSegment(player.x, player.y, start, end) <= radius) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function checkSelfTrailOverlap(player) { 
+    
+    if (player.direction == 'none') return false; //Si no se ha movido, no puede chocar con su propia estela
+
+    const trail = player.trail;
+    const puntosSeguros = 20; //Para que los puntos que aparecen detras de la propia moto no lo maten
+
+    //Si no tiene suficientes puntos, no nos podemos chocar
+    if (trail.length < puntosSeguros ) return false;
+    
+    const radius = 12; //Mismo radio que antes
+
+    // Solo comprobamos los segmentos que están lo suficientemente lejos de la moto
+    for (let i = 1; i < trail.length - puntosSeguros; i++) {
 
         const start = trail[i - 1];
         const end = trail[i];
