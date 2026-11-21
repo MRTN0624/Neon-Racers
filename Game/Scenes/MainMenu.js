@@ -5,8 +5,8 @@ class MainMenu extends Phaser.Scene {
     }
 
     // Inicialización de los elementos del menú principal
-        create() {
-        
+    create() {
+
         //this.sound.stopAll(); //Si no pones este stop si estas en ayuda y vuelves al menu, se solapan las canciones y suena todo a la vez.
 
         // Detener la música de las partidas
@@ -79,10 +79,10 @@ class MainMenu extends Phaser.Scene {
                     fontFamily: 'PixelFont',
                 }
             )
-            .setOrigin(0.5)
-            .setInteractive({
-                useHandCursor: true
-            });
+                .setOrigin(0.5)
+                .setInteractive({
+                    useHandCursor: true
+                });
 
             // Seleccionar al pasar el ratón
             text.on('pointerover', () => {
@@ -158,11 +158,17 @@ class MainMenu extends Phaser.Scene {
         switch (this.selectedOption) {
 
             case 0: // JUGAR LOCAL
-                this.scene.start('Core');
+                this.scene.start('Core', {
+                    score1: 0,
+                    score2: 0
+                });
                 break;
-            
+
             case 1: // JUGAR EN LÍNEA
-                this.scene.start('Core'); //Por implementar !!!
+                this.scene.start('Core', {
+                    score1: 0,
+                    score2: 0
+                }); //Por implementar !!!
                 break;
 
             case 2: // OPCIONES

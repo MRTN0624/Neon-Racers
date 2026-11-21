@@ -38,7 +38,12 @@ function showGameOver(scene, player1, player2) {
     const reiniciarPartida = () => {
         if (transitioning) return;
         transitioning = true;
-        fadeOutVictoryMusic(scene, () => scene.scene.restart());
+        fadeOutVictoryMusic(scene, () => {
+            scene.scene.restart({
+                score1: scene.score1,
+                score2: scene.score2
+            });
+        });
     };
 
     const volverAlMenu = () => {
@@ -47,7 +52,7 @@ function showGameOver(scene, player1, player2) {
         fadeOutVictoryMusic(scene, () => scene.scene.start('MainMenu'));
     };
 
-    
+
     const btnRestart = scene.add.text(400, 600 - 120, 'VOLVER A JUGAR (ENTER)', {
         fontSize: '20px',
         color: '#F5C518',

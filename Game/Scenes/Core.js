@@ -5,6 +5,12 @@ class Core extends Phaser.Scene {
         super('Core');
     }
 
+    // Recuperar las puntuaciones al reiniciar la escena
+    init(data) {
+        this.score1 = data.score1 || 0;
+        this.score2 = data.score2 || 0;
+    }
+
     // Inicialización y pintado inicial de objetos
     create() {
 
@@ -112,9 +118,9 @@ class Core extends Phaser.Scene {
 
         this.gameOverTriggered = false;  //Ha saltado el game_over?
 
-        
-        
-        
+
+
+
         // SISTEMA DE PAUSA PARA DOS JUGADORES
 
         const pauseGame = (event) => {
@@ -174,7 +180,7 @@ class Core extends Phaser.Scene {
 
             if (body.gameObject === this.players[0]) {
                 resolveCollision(this, this.players[0], this.players[1], 'player1-wall');
-            } 
+            }
             else if (body.gameObject === this.players[1]) {
                 resolveCollision(this, this.players[0], this.players[1], 'player2-wall');
             }
@@ -199,6 +205,12 @@ class Core extends Phaser.Scene {
             callback: () => RandomObjectGenerator(this),
             loop: true
         });
+
+        this.scoreText = this.add.text(720, 0, this.score1 + " - " + this.score2, {
+            fontSize: '28px',
+            color: '#ffffff',
+            fontFamily: 'PixelFont',
+        })
 
     }
 
@@ -228,11 +240,11 @@ function updatePlayer(player, delta) {
     const deltaSec = delta / 1000;
 
     // --- 1. LÓGICA DE ESTELA (TRAIL) ---
-    if (player.direction != 'none' && player.speed > 0) { 
+    if (player.direction != 'none' && player.speed > 0) {
         //Si el jugador no tiene direccion o no esta congelado 
         const lastPoint = player.trail[player.trail.length - 1];
 
-        if (!lastPoint || lastPoint.x !== player.x || lastPoint.y !== player.y) { 
+        if (!lastPoint || lastPoint.x !== player.x || lastPoint.y !== player.y) {
             //Comprueba si existe, un punto previo o la moto se ha movido en cualquiera de los ejes.
             player.trail.push({ x: player.x, y: player.y });
         }
@@ -241,7 +253,7 @@ function updatePlayer(player, delta) {
             player.trail.shift();
         }
     }
-    
+
 
     player.trailGraphics.clear();
 
@@ -272,25 +284,25 @@ function updatePlayer(player, delta) {
 
     // --- 2. ENTRADA DE CONTROLES (DIRECCIÓN) ---       
     if (player.speed > 0) {  //Si el jugador esta congelado no puede hacer nada
-    if (player.controls.left.isDown && player.direction != 'right') { //El jugador no puede girar 180º
-        player.angle = -90;
-        player.direction = 'left';
-        player.body.setSize(1200, 400, true); //Si se puede cambiar la hitbox si cambias de direccion
-    } else if (player.controls.right.isDown && player.direction != 'left') {
-        player.angle = 90;
-        player.direction = 'right';
-        player.body.setSize(1200, 400, true);
-    }
+        if (player.controls.left.isDown && player.direction != 'right') { //El jugador no puede girar 180º
+            player.angle = -90;
+            player.direction = 'left';
+            player.body.setSize(1200, 400, true); //Si se puede cambiar la hitbox si cambias de direccion
+        } else if (player.controls.right.isDown && player.direction != 'left') {
+            player.angle = 90;
+            player.direction = 'right';
+            player.body.setSize(1200, 400, true);
+        }
 
-    if (player.controls.up.isDown && player.direction != 'down') {
-        player.angle = 0;
-        player.direction = 'up';
-        player.body.setSize(400 ,1200, true);
-    } else if (player.controls.down.isDown && player.direction != 'up') {
-        player.angle = 180;
-        player.direction = 'down';
-        player.body.setSize(400 ,1200, true);
-    }
+        if (player.controls.up.isDown && player.direction != 'down') {
+            player.angle = 0;
+            player.direction = 'up';
+            player.body.setSize(400, 1200, true);
+        } else if (player.controls.down.isDown && player.direction != 'up') {
+            player.angle = 180;
+            player.direction = 'down';
+            player.body.setSize(400, 1200, true);
+        }
     }
 
     // --- 3. MOVIMIENTO FÍSICO / POSICIÓN ---
@@ -330,7 +342,7 @@ function createPlayer(scene, x, y, key, startDirection, startAngle, controls, tr
     //const player = scene.add.image(x, y, key); Sin físicas
     const player = scene.physics.add.image(x, y, key); //Añadir físicas
     player.setScale(0.05);
-    player.body.setSize(400,1200,true); //Esta exacto para que ocupe la moto no lo cambieis porfa 
+    player.body.setSize(400, 1200, true); //Esta exacto para que ocupe la moto no lo cambieis porfa 
     player.direction = startDirection;
     player.angle = startAngle;
     player.setDepth(1);
@@ -356,4 +368,16 @@ function createPlayer(scene, x, y, key, startDirection, startAngle, controls, tr
     player.alive = true; //Para Collision
 
     return player;
+}
+
+function updateScore(scene, player1Win) {
+
+    if (player1Win == true) {
+        scene.score1 += 1;
+    }
+    else {
+        scene.score2 += 1;
+    }
+
+    scene.scoreText.setText(scene.score1 + " - " + scene.score2);
 }

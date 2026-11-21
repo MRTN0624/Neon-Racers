@@ -150,6 +150,7 @@ function resolveCollision(scene, player1, player2, collisionType) {
             player1.destroy(); // Se destruye la moto 1
 
             console.log("Jugador 2 ha ganado");
+            updateScore(scene,false);
         }
 
         else if (player1.inmortal === true && player2.inmortal === false) {
@@ -158,6 +159,7 @@ function resolveCollision(scene, player1, player2, collisionType) {
             player2.destroy(); // Se destruye la moto 2
 
             console.log("Jugador 1 ha ganado");
+            updateScore(scene,true);
         }
 
         else {
@@ -174,6 +176,7 @@ function resolveCollision(scene, player1, player2, collisionType) {
         player1.destroy(); // Se destruye la moto 1
 
         console.log("Jugador 2 ha ganado");
+        updateScore(scene,false);
     }
 
     // 3. Moto 2 contra estela de moto 1
@@ -185,6 +188,7 @@ function resolveCollision(scene, player1, player2, collisionType) {
         player2.destroy(); // Se destruye la moto 2
 
         console.log("Jugador 1 ha ganado");
+        updateScore(scene,true);
     }
 
     // Si no reconocemos el tipo de colisión, salimos de la función
