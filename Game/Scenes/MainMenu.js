@@ -59,13 +59,14 @@ class MainMenu extends Phaser.Scene {
             'JUGAR EN LÍNEA',
             'OPCIONES',
             'AYUDA',
-            'CRÉDITOS'
+            'CRÉDITOS',
+            'SALIR'
         ];
 
         this.menuOptions = [];
 
         const startY = height / 2 - 20;
-        const spacing = 60;
+        const spacing = 50;
 
         options.forEach((option, index) => {
 
@@ -181,6 +182,10 @@ class MainMenu extends Phaser.Scene {
 
             case 4: // CRÉDITOS
                 this.scene.start('Credits');
+                break;
+
+            case 5: // SALIR
+                window.close();
                 break;
         }
     }
