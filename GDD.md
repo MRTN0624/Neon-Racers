@@ -78,7 +78,7 @@ El objetivo de cada jugador es crear una estela con su moto para conseguir que e
 | Objeto | Efecto | Duración | Aparición |
 | :---- | :---- | :---- | :---- |
 | Velocidad | Proporciona una mayor velocidad al jugador  | 3 s | Aleatoria cada 5 s |
-| Inmortalidad  | Permite al jugador atravesar trazas de otros jugadores. | 2 s | Aleatoria cada 5 s |
+| Inmortalidad  | Permite al jugador atravesar trazas de otros jugadores. | 3 s | Aleatoria cada 5 s |
 | Eliminador de trazas  | Elimina todas las trazas del mapa  | Instantáneo | Aleatoria cada 5 s |
 | Congelación | Congelas al otro jugador | 3 s  | Aleatoria cada 5 s |
 | Traza Aumentada | La traza del jugador dura más tiempo | 3 s | Aleatoria cada 5 s |
