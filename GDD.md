@@ -77,11 +77,11 @@ El objetivo de cada jugador es crear una estela con su moto para conseguir que e
 
 | Objeto | Efecto | Duración | Aparición |
 | :---- | :---- | :---- | :---- |
-| Velocidad | Proporciona una mayor velocidad al jugador  | 2 s | Aleatoria cada 5 s |
+| Velocidad | Proporciona una mayor velocidad al jugador  | 3 s | Aleatoria cada 5 s |
 | Inmortalidad  | Permite al jugador atravesar trazas de otros jugadores. | 2 s | Aleatoria cada 5 s |
 | Eliminador de trazas  | Elimina todas las trazas del mapa  | Instantáneo | Aleatoria cada 5 s |
-| Congelación | Congelas al otro jugador | 2 s  | Aleatoria cada 5 s |
-| Traza Aumentada | La traza del jugador dura más tiempo | 2 s | Aleatoria cada 10 segundos |
+| Congelación | Congelas al otro jugador | 3 s  | Aleatoria cada 5 s |
+| Traza Aumentada | La traza del jugador dura más tiempo | 3 s | Aleatoria cada 5 s |
 
 #### 3.3.3. Sistema de puntuación
 
@@ -89,7 +89,7 @@ El juego contabiliza el número de partidas que ha ganado cada jugador. Este con
 
 ### 3.4. Físicas y dificultad
 
-* Colisiones: Las estelas colisionan con los jugadores (el jugador pierde al colisionar con la estela). Los jugadores también colisionan entre ellos (ambos jugadores pierden). Los jugadores colisionan con las paredes del escenario (el jugador se queda parado hasta cambiar de dirección).  
+* Colisiones: Las estelas colisionan con los jugadores (el jugador pierde al colisionar con la estela). Los jugadores también colisionan entre ellos (ambos jugadores pierden). Los jugadores colisionan con las paredes del escenario (el jugador se queda parado hasta cambiar de dirección).  Los jugadores colisionan con los objetos (se activa un power-up)
 * Progresión de la dificultad: a medida que avanza la partida, aumenta la frecuencia en la que aparecen los power-ups (Aumenta un 50% cada 30 segundos de partida, hasta un máximo de 200%).
 
 ### 3.5. Escenario
