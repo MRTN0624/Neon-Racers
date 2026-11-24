@@ -85,6 +85,6 @@ Los objetos especiales se activan automáticamente al recogerlos.
 | Fase | Contenido | Estado |
 | :--- | :--- | :--- |
 | Fase 1 | Equipo, temática y GDD | ✅ Entregada ([tag fase-1](https://github.com/MRTN0624/Neon-Racers/tree/fase-1)) |
-| Fase 2 | Juego en local | ✅ Implementada |
+| Fase 2 | Juego en local | ✅ Entregada ([tag fase-2](https://github.com/MRTN0624/Neon-Racers/tree/fase-2)) |
 | Fase 3 | API REST | ⏳ Pendiente |
 | Fase 4 | WebSockets | ⏳ Pendiente |
