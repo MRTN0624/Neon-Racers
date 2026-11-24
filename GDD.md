@@ -48,6 +48,9 @@ Figura 1. Imagen promocional del juego.
 | Representación | 2D |
 | Licencia | Apache 2.0 |
 
+> [!NOTE]
+> En la fase 2, el juego funciona exclusivamente en modo multijugador local. Aunque el menú principal incluye la opción «JUGAR EN LÍNEA», esta todavía no dispone de comunicación en red y actualmente inicia una partida local. La comunicación cliente-servidor mediante API REST se implementará en la fase 3, mientras que la comunicación en tiempo real mediante WebSockets se desarrollará en la fase 4.
+
 ---
 
 ## 3\. Jugabilidad
@@ -216,8 +219,6 @@ Los efectos sonoros independientes de movimiento, impacto, recogida de objetos y
 <img src="img/Menu_Principal.jpg" alt="MenuPrincipal" width="400">
 Figura 6. Boceto del menú principal. La versión de la fase 2 incluye jugar en local, jugar en línea (opción prevista para fases posteriores), opciones, ayuda, créditos y salir.
 
-En la fase 2, el juego funciona exclusivamente en modo multijugador local. Aunque el menú principal incluye la opción «JUGAR EN LÍNEA», esta todavía no dispone de comunicación en red y actualmente inicia una partida local. La comunicación cliente-servidor mediante API REST se implementará en la fase 3, mientras que la comunicación en tiempo real mediante WebSockets se desarrollará en la fase 4. 
-
 #### Pantalla de juego (HUD)  
 
 <img src="img/Interfaz.jpg" alt="HUD" width="400">
@@ -237,12 +238,13 @@ Figura 9. Bocetos de ajustes (izquierda) y fin de partida (derecha). Los ajustes
 
 #### Pantalla de carga
 
-La pantalla de carga prepara los recursos gráficos y sonoros antes de mostrar el menú principal.
+<img src="img/PantallaDeCarga.jpg" alt="Pantalla de carga" width="400">
+Figura 10. La pantalla de carga prepara los recursos gráficos y sonoros antes de mostrar el menú principal.
 
 #### Menú de pausa
 
 <img src="img/Pausa.jpg" alt="Menú de pausa" width="400">
-Figura 10. Menú de pausa. Se superpone a la pantalla de juego y detiene la partida y su música. Se activa mediante la tecla Q (jugador 1) o P (jugador 2). Permite continuar la partida, reiniciarla (reiniciando el marcador de victorias) o regresar al menú principal. También se puede reanudar la partida pulsando Q o P.
+Figura 11. Menú de pausa. Se superpone a la pantalla de juego y detiene la partida y su música. Se activa mediante la tecla Q (jugador 1) o P (jugador 2). Permite continuar la partida, reiniciarla (reiniciando el marcador de victorias) o regresar al menú principal. También se puede reanudar la partida pulsando Q o P.
 
 ### 7.2. Diagrama de flujo
 
@@ -265,7 +267,7 @@ flowchart TD
     G --> |Volver al menú| B
 ```
 
-Figura 11. Diagrama de flujo entre pantallas.  
+Figura 12. Diagrama de flujo entre pantallas.  
 
 
 ## 8\. Comunicación y marketing
