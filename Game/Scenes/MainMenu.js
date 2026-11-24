@@ -39,20 +39,55 @@ class MainMenu extends Phaser.Scene {
             this.menuMusic = this.sound.add('musicMenu', { loop: true });
             const menuMusic = this.menuMusic;
 
-            // Esperar al desbloqueo del audio por el navegador si es necesario.
-            if (this.sound.locked) {
-                const soundManager = this.sound;
-                const playMenuMusic = () => {
-                    if (soundManager.getAll('musicMenu').includes(menuMusic) &&
-                        !menuMusic.isPlaying) {
-                        menuMusic.play();
-                    }
-                };
+            const soundManager = this.sound;
+            const context = soundManager.context;
 
-                soundManager.once('unlocked', playMenuMusic);
-            } else {
-                menuMusic.play();
-            }
+            // Retirar los eventos cuando la música arranque o se destruya.
+            const cleanup = () => {
+                window.removeEventListener('pointerdown', unlockAudio, true);
+                window.removeEventListener('pointerup', unlockAudio, true);
+                window.removeEventListener('keydown', unlockAudio, true);
+                soundManager.off('unlocked', playMenuMusic);
+                context?.removeEventListener('statechange', playMenuMusic);
+                menuMusic.off('destroy', cleanup);
+            };
+
+            const playMenuMusic = () => {
+                if (!soundManager.getAll('musicMenu').includes(menuMusic)) {
+                    cleanup();
+                    return;
+                }
+
+                if (context && context.state !== 'running') return;
+                if (soundManager.locked) return;
+
+                if (!menuMusic.isPlaying) menuMusic.play();
+                if (menuMusic.isPlaying) cleanup();
+            };
+
+            // Reactivar Web Audio dentro de una interacción del usuario.
+            const unlockAudio = () => {
+                if (!soundManager.getAll('musicMenu').includes(menuMusic)) {
+                    cleanup();
+                    return;
+                }
+
+                if (context && context.state === 'suspended') {
+                    context.resume().then(playMenuMusic).catch(error => {
+                        console.warn('No se pudo reactivar el audio:', error);
+                    });
+                } else {
+                    playMenuMusic();
+                }
+            };
+
+            window.addEventListener('pointerdown', unlockAudio, true);
+            window.addEventListener('pointerup', unlockAudio, true);
+            window.addEventListener('keydown', unlockAudio, true);
+            soundManager.on('unlocked', playMenuMusic);
+            context?.addEventListener('statechange', playMenuMusic);
+            menuMusic.once('destroy', cleanup);
+            playMenuMusic();
         }
 
         // 1. Configuración visual de la escena
