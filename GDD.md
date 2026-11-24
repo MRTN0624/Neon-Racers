@@ -228,7 +228,7 @@ Figura 7. Boceto de la pantalla de juego. La versión actual muestra la arena, l
 
 <img src="img/Ayuda.jpg" alt="HUD" width="400">
 <img src="img/Creditos.jpg" alt="HUD" width="400">
-Figura 8. Ayuda (izquierda) y Creditos (derecha).
+Figura 8. Ayuda (izquierda) y créditos (derecha).
 
 #### Ajustes y fin de partida
 

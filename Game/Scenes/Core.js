@@ -1,4 +1,3 @@
-
 class Core extends Phaser.Scene {
 
     constructor() {
@@ -16,7 +15,7 @@ class Core extends Phaser.Scene {
 
         RandomObjects = []; //al reiniciar la escena reiniciamos el array
 
-        this.sound.stopByKey('musicMenu');
+        this.sound.removeByKey('musicMenu');
         const maps = {
 
             map1: {

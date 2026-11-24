@@ -37,7 +37,22 @@ class MainMenu extends Phaser.Scene {
         if (!isAlreadyPlaying) { //Si no suena nada se reproduce la musica del menu
             this.sound.removeByKey('musicMenu');
             this.menuMusic = this.sound.add('musicMenu', { loop: true });
-            this.menuMusic.play();
+            const menuMusic = this.menuMusic;
+
+            // Esperar al desbloqueo del audio por el navegador si es necesario.
+            if (this.sound.locked) {
+                const soundManager = this.sound;
+                const playMenuMusic = () => {
+                    if (soundManager.getAll('musicMenu').includes(menuMusic) &&
+                        !menuMusic.isPlaying) {
+                        menuMusic.play();
+                    }
+                };
+
+                soundManager.once('unlocked', playMenuMusic);
+            } else {
+                menuMusic.play();
+            }
         }
 
         // 1. Configuración visual de la escena
