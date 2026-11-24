@@ -81,7 +81,7 @@ class Help extends Phaser.Scene {
         this.add.text(
             width / 4,
             285,
-            'JUGADOR 1\n\nWASD - Movimiento',
+            'JUGADOR 1\n\nWASD - Movimiento\nQ - Pausar / Reanudar',
             {
                 fontSize: '16px',
                 color: '#ffffff',
@@ -95,7 +95,7 @@ class Help extends Phaser.Scene {
         this.add.text(
             width * 3 / 4,
             285,
-            'JUGADOR 2\n\n↑ ↓ ← →  - Movimiento',
+            'JUGADOR 2\n\n↑ ↓ ← →  - Movimiento\nP - Pausar / Reanudar',
             {
                 fontSize: '16px',
                 color: '#ffffff',
