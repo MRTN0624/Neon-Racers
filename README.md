@@ -11,7 +11,15 @@
 
 Neon Racers es un juego en 2D con vista cenital inspirado en el Tron clásico. Dos jugadores controlan sendas motos que dejan una estela a su paso. El objetivo es sobrevivir al rival evitando las estelas y los límites del escenario, y aprovechando los objetos especiales (power-ups).
 
-En la fase 2 el juego funciona en modo multijugador local. El modo en red se desarrollará en las fases posteriores.
+## Jugar a Neon Racers
+
+Puedes jugar directamente desde el navegador sin necesidad
+de descargar el repositorio.
+
+[Jugar a Neon Racers](https://mrtn0624.github.io/Neon-Racers/Game/idx.html)
+
+**Nota:** La versión correspondiente a la fase 2 permite
+jugar en modo multijugador local.
 
 ## Equipo de desarrollo
 
@@ -58,7 +66,7 @@ Apartados principales:
 
 La opción «JUGAR EN LÍNEA» todavía no dispone de comunicación en red y actualmente inicia una partida local. La API REST se implementará en la fase 3 y la comunicación en tiempo real mediante WebSockets, en la fase 4.
 
-## Ejecución del juego
+## Ejecución del juego en un servidor local
 
 El juego está desarrollado con Phaser 3 y se ejecuta en un navegador web de escritorio.
 
