@@ -235,9 +235,14 @@ Figura 8. Ayuda (izquierda) y Creditos (derecha).
 <img src="img/FinDePartida.jpg" alt="HUD" width="400">
 Figura 9. Bocetos de ajustes (izquierda) y fin de partida (derecha). Los ajustes permiten regular y silenciar el audio. Al terminar una partida se muestra el resultado y se puede volver a jugar o regresar al menú principal.
 
-#### Pantalla de carga y menú de pausa
+#### Pantalla de carga
 
-La pantalla de carga prepara los recursos gráficos y sonoros antes de mostrar el menú principal. El menú de pausa se superpone a la partida y permite continuar, reiniciar o regresar al menú principal.
+La pantalla de carga prepara los recursos gráficos y sonoros antes de mostrar el menú principal.
+
+#### Menú de pausa
+
+<img src="img/Pausa.jpg" alt="Menú de pausa" width="400">
+Figura 10. Menú de pausa. Se superpone a la pantalla de juego y detiene la partida y su música. Se activa mediante la tecla Q (jugador 1) o P (jugador 2). Permite continuar la partida, reiniciarla (reiniciando el marcador de victorias) o regresar al menú principal. También se puede reanudar la partida pulsando Q o P.
 
 ### 7.2. Diagrama de flujo
 
@@ -260,7 +265,7 @@ flowchart TD
     G --> |Volver al menú| B
 ```
 
-Figura 10. Diagrama de flujo entre pantallas.  
+Figura 11. Diagrama de flujo entre pantallas.  
 
 
 ## 8\. Comunicación y marketing
