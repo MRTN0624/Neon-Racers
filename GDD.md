@@ -27,7 +27,8 @@ Neon Racers es un juego de PVP para dos jugadores en el que los jugadores tienen
 * Característica diferencial 1: Power-Ups de velocidad.  
 * Característica diferencial 2: Power-Ups de inmortalidad.  
 * Característica diferencial 3: Power-Ups de eliminar trazas.  
-* Característica diferencial 4: Power-Ups de Congelar al otro jugador.
+* Característica diferencial 4: Power-Ups de congelar al otro jugador.
+* Característica diferencial 5: Power-Ups de traza aumentada.
 
  <img src="img/Promotional_Image.jpg" alt="Imagen Promocional de Neon Racers" width="800" height = "600">  
 Figura 1. Imagen promocional del juego.
@@ -35,15 +36,15 @@ Figura 1. Imagen promocional del juego.
 
 ## 2\. Especificaciones básicas
 
-| Aspecto | RetroWave |
+| Aspecto | Neon Racers |
 | :---- | :---- |
 | Título | Neon Racers |
 | Género | Acción |
-| Número de jugadores | 2 (en red, tiempo real) |
+| Número de jugadores | 2 (modo local en tiempo real en la fase 2; modo en red previsto para fases posteriores) |
 | Público objetivo | Todos los públicos |
 | Clasificación PEGI | PEGI \+7 (violencia leve) |
 | Plataforma | Navegador web (PC), desarrollado con Phaser 3 |
-| Duración de una partida | 2 minutos |
+| Duración de una partida | Variable, hasta que se cumple una condición de fin de partida |
 | Representación | 2D |
 | Licencia | Apache 2.0 |
 
@@ -53,7 +54,7 @@ Figura 1. Imagen promocional del juego.
 
 ### 3.1. Objetivo del juego
 
-El objetivo de cada jugador es crear una estela con su moto para conseguir que el rival se choque con ella. La partida termina cuando un jugador choca con la estela de su rival o cuando ambos jugadores colisionan entre ellos. Gana el jugador que no se choque con la estela de su rival. Cuando ambos jugadores colisionan entre sí, pierden ambos.
+El objetivo de cada jugador es sobrevivir al rival utilizando la estela de su moto y los power-ups del escenario. Un jugador pierde al colisionar con una estela, propia o rival, o con los límites del escenario. Si ambos jugadores colisionan entre sí, se produce un empate. No existe un límite de tiempo fijo para la partida.
 
 ### 3.2. Controles
 
@@ -63,38 +64,40 @@ El objetivo de cada jugador es crear una estela con su moto para conseguir que e
 | Moverse a la derecha | D | → |
 | Moverse hacia arriba | W | ↑ |
 | Moverse hacia abajo | S | ↓  |
-| Pausa | Esc | Esc |
+| Pausa / reanudar | Q | P |
+
+Los menús permiten interactuar mediante el teclado y el ratón. Los controles de movimiento están diferenciados para que ambos jugadores puedan compartir un mismo teclado.
 
 ### 3.3. Mecánica
 
 #### 3.3.1. Mecánicas principales
 
 * Movimiento del jugador: El personaje jugable tiene un movimiento fijo en una dirección. El jugador puede cambiar la dirección pulsando WASD o las flechas direccionales (un jugador usa WASD y el otro las flechas direccionales) en modo local.
-* Traza: El jugador crea una estela detrás suya que al contacto con otro jugador hace que este pierda.  
-* Power-ups: Cada x segundos (varía según el objeto) aparece un objeto recolectable en una posición aleatoria del mapa. Cuando un jugador toca un objeto, obtiene un power-up que se activa automáticamente
+* Traza: El jugador crea una estela de longitud limitada detrás de su moto. Tanto la estela propia como la del rival pueden provocar la derrota al colisionar con ellas.  
+* Power-ups: Cada 5 segundos aparece un objeto recolectable de tipo y posición aleatorios. Se mantienen como máximo tres objetos simultáneos; al superar este límite se elimina el más antiguo. Cuando un jugador toca un objeto, obtiene un power-up que se activa automáticamente.
 
 #### 3.3.2. Objetos y power-ups
 
 | Objeto | Efecto | Duración | Aparición |
 | :---- | :---- | :---- | :---- |
 | Velocidad | Proporciona una mayor velocidad al jugador  | 3 s | Aleatoria cada 5 s |
-| Inmortalidad  | Permite al jugador atravesar trazas de otros jugadores. | 3 s | Aleatoria cada 5 s |
-| Eliminador de trazas  | Elimina todas las trazas del mapa  | Instantáneo | Aleatoria cada 5 s |
-| Congelación | Congelas al otro jugador | 3 s  | Aleatoria cada 5 s |
-| Traza Aumentada | La traza del jugador dura más tiempo | 3 s | Aleatoria cada 5 s |
+| Inmortalidad  | Otorga un estado temporal de inmortalidad, indicado mediante un parpadeo. | 3 s | Aleatoria cada 5 s |
+| Eliminador de trazas  | Elimina la traza del jugador rival  | Instantáneo | Aleatoria cada 5 s |
+| Congelación | Congela al otro jugador | 3 s  | Aleatoria cada 5 s |
+| Traza Aumentada | Aumenta un 50 % la longitud máxima de la traza del jugador | 3 s | Aleatoria cada 5 s |
 
 #### 3.3.3. Sistema de puntuación
 
-El juego contabiliza el número de partidas que ha ganado cada jugador. Este contador se encuentra en la parte superior de la pantalla y se resetea cada vez que reinicias el juego. 
+El juego contabiliza el número de partidas que ha ganado cada jugador. Este contador se encuentra en la parte superior de la pantalla y se conserva al volver a jugar desde el fin de partida. Se reinicia al iniciar una nueva sesión desde el menú principal o al reiniciar desde el menú de pausa. Los empates no suman victorias. 
 
 ### 3.4. Físicas y dificultad
 
-* Colisiones: Las estelas colisionan con los jugadores (el jugador pierde al colisionar con la estela). Los jugadores también colisionan entre ellos (ambos jugadores pierden). Los jugadores colisionan con las paredes del escenario (el jugador se queda parado hasta cambiar de dirección).  Los jugadores colisionan con los objetos (se activa un power-up)
-* Progresión de la dificultad: a medida que avanza la partida, aumenta la frecuencia en la que aparecen los power-ups (Aumenta un 50% cada 30 segundos de partida, hasta un máximo de 200%).
+* Colisiones: Se utiliza Arcade Physics de Phaser 3 para gestionar las interacciones físicas de las motos y los objetos. Las colisiones con las estelas se comprueban mediante los segmentos que las forman. Los choques entre motos provocan un empate; las colisiones con estelas o límites del escenario pueden provocar la derrota. Al recoger un objeto se activa su power-up.
+* Dificultad: Los objetos aparecen cada 5 segundos durante toda la partida. La dificultad surge de las decisiones de los jugadores, la disposición de las estelas y los efectos de los power-ups. No se aplica un incremento automático de la frecuencia de aparición.
 
 ### 3.5. Escenario
 
-El escenario representa una arena de combate futurista con vista cenital, inspirada en la estética de Tron. Está formado por una cuadrícula sobre un fondo negro, rodeada de barreras luminosas que delimitan la zona de juego. Se compone de 3 zonas:
+El escenario representa una arena de combate futurista con vista cenital, inspirada en la estética de Tron. Está formado por una cuadrícula sobre un fondo negro, rodeada de barreras luminosas que delimitan la zona de juego. Existen tres variantes de la arena, seleccionadas aleatoriamente al comenzar cada partida:
 
 1. Zona Azul: El fondo es negro con bordes azules.
 2. Zona Roja: El fondo es negro con bordes rojos.  
@@ -159,7 +162,7 @@ Figura 4. Paleta de colores del juego.
 
 * Representación: 2D, con vista cenital  
 * Cámara: Fija, mostrando todo el escenario.  
-* Resolución base: 1080 × 1080 píxeles.
+* Resolución base: 800 × 600 píxeles.
 
 ### 5.5. Inspiración artística y cultural
 
@@ -188,21 +191,19 @@ Los bocetos de los personajes se encuentran en el apartado [4.2](#42-personajes)
 
 ### 6.1. Banda sonora
 
-| Pista | Escena | Estilo / ambiente | Fuente / licencia |
+| Pista | Escena | Estilo / ambiente | Fuente |
 | :---- | :---- | :---- | :---- |
-| 001 | Menú principal | Retrowave \- 8 bit | https\://youtu.be/TtlLKbFMeuU |
-| 002 | Partida | Retrowave \- 8 bit | https\://youtu.be/zljRr4nFLIc |
-| 003 | Victoria | Retrowave \- 8 bit | https\://youtu.be/s4p-D93jydw |
+| Tron Legacy: The Grid 8 bit | Menú principal | Retrowave / 8 bit | https://youtu.be/TtlLKbFMeuU |
+| TRON Legacy - 8-Bit GRID 2.0 | Partida, mapa 1 | Electrónico / 8 bit | Archivo de audio del proyecto |
+| TRON Ares Arcade | Partida, mapa 2 | Electrónico | Archivo de audio del proyecto |
+| TRON - The Son of Flynn 8-bit cover | Partida, mapa 3 | Electrónico / 8 bit | Archivo de audio del proyecto |
+| Tron Legacy 8-Bit End Credits | Fin de partida | Retrowave / 8 bit | https://youtu.be/s4p-D93jydw |
 
-### 6.2. Efectos de sonido
+### 6.2. Efectos de sonido y gestión del audio
 
-| Efecto | Momento en que se reproduce |
-| :---- | :---- |
-| Movimiento | Al moverse un personaje |
-| Impacto | Al chocar un personaje con una estela |
-| Recoger objeto | Al tomar un personaje un objeto |
-| Power-up | Al tener un personaje un power-up |
-| Botones de la interfaz | Al pasar el ratón y al hacer clic |
+En la fase 2 se ha priorizado la ambientación musical. Cada mapa dispone de su propia pista, diferenciada de la música del menú y del fin de partida. Se utilizan fundidos de salida para suavizar determinados cambios de música. La música de partida se pausa y se reanuda junto con el juego. Desde los ajustes se puede modificar el volumen general y silenciar el audio.
+
+Los efectos sonoros independientes de movimiento, impacto, recogida de objetos y botones no se han incorporado en esta fase.
 
 ---
 
@@ -213,12 +214,14 @@ Los bocetos de los personajes se encuentran en el apartado [4.2](#42-personajes)
 #### Menú principal  
 
 <img src="img/Menu_Principal.jpg" alt="MenuPrincipal" width="400">
-Figura 6. Menú principal: Con boton de jugar y ajustes.  
+Figura 6. Boceto del menú principal. La versión de la fase 2 incluye jugar en local, jugar en línea (opción prevista para fases posteriores), opciones, ayuda, créditos y salir.
+
+En la fase 2, el juego funciona exclusivamente en modo multijugador local. Aunque el menú principal incluye la opción «JUGAR EN LÍNEA», esta todavía no dispone de comunicación en red y actualmente inicia una partida local. La comunicación cliente-servidor mediante API REST se implementará en la fase 3, mientras que la comunicación en tiempo real mediante WebSockets se desarrollará en la fase 4. 
 
 #### Pantalla de juego (HUD)  
 
 <img src="img/Interfaz.jpg" alt="HUD" width="400">
-Figura 7. Pantalla de juego: Rondas y huecos para los power-ups. 
+Figura 7. Boceto de la pantalla de juego. La versión actual muestra la arena, las motos, las estelas, los objetos y el marcador de victorias. 
 
 #### Ayuda y créditos 
 
@@ -230,27 +233,29 @@ Figura 8. Ayuda (izquierda) y Creditos (derecha).
 
 <img src="img/Ajustes.jpg" alt="HUD" width="400">
 <img src="img/FinDePartida.jpg" alt="HUD" width="400">
-Figura 9. Pantalla de ajustes (izquierda) y fin de partida (derecha).
+Figura 9. Bocetos de ajustes (izquierda) y fin de partida (derecha). Los ajustes permiten regular y silenciar el audio. Al terminar una partida se muestra el resultado y se puede volver a jugar o regresar al menú principal.
+
+#### Pantalla de carga y menú de pausa
+
+La pantalla de carga prepara los recursos gráficos y sonoros antes de mostrar el menú principal. El menú de pausa se superpone a la partida y permite continuar, reiniciar o regresar al menú principal.
 
 ### 7.2. Diagrama de flujo
 
 ```mermaid
 flowchart TD
     A[Pantalla de carga] --> B[Menú principal]
-    B --> |Ajustes| D[Ajustes]
+    B --> |Opciones| D[Ajustes]
     B --> |Ayuda| J[Ayuda]
     J --> |Volver| B
     B --> |Créditos| E[Créditos]
     E --> |Volver| B
-    D --> |Volver| L{¿De donde vienes?}
-    B --> |Jugar| F[Partida]
-    F --> |Esc| K[Pausa]
-    K --> |Reanudar| F
-    K --> |Ajustes| D
-    K --> |Volver al menú| B
-    L --> |Menú principal| B
-    L --> |Menú de pausa| K
-    F --> |Condición de derrota| G[Fin de Partida]
+    D --> |Volver| B
+    B --> |Jugar local| F[Partida]
+    F --> |Q o P| K[Pausa]
+    K --> |Continuar| F
+    K --> |Reiniciar| F
+    K --> |Menú principal| B
+    F --> |Fin de partida| G[Resultado]
     G --> |Volver a jugar| F
     G --> |Volver al menú| B
 ```
@@ -279,3 +284,7 @@ https://youtu.be/zljRr4nFLIc
 
 [3] XxXTronLegacyXxX. (2011). Tron Legacy 8-Bit End Credits Theme Extended [Vídeo]. YouTube.
 https://youtu.be/s4p-D93jydw
+
+[4] TRON: Ares Arcade (8-bit Nine Inch Nails chiptune) [Vídeo]. YouTube. https://youtu.be/cW6SZ4fQb9k
+
+[5] TRON - The Son of Flynn 8-bit cover [Vídeo]. YouTube. https://youtu.be/Bsm8mqaLb4c
