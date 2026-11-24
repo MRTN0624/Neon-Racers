@@ -9,7 +9,10 @@
 
 ## Descripción de la temática
 
-Neon Racers es un juego en 2D con vista cenital donde 2 jugadores en red controlan cada uno una moto que deja una estela tras su paso. Inspirado en el Tron clásico. Los jugadores deben evitar tocar la estela del rival para evitar ser destruidos.
+Neon Racers es un juego en 2D con vista cenital inspirado en el Tron clásico. Dos jugadores controlan sendas motos que dejan una estela a su paso. El objetivo es sobrevivir al rival evitando las estelas y los límites del escenario, y aprovechando los objetos especiales (power-ups).
+
+En la fase 2 el juego funciona en modo multijugador local. El modo en red se desarrollará en las fases posteriores.
+
 ## Equipo de desarrollo
 
 | Nombre y apellidos | Correo URJC | GitHub |
@@ -42,11 +45,46 @@ Apartados principales:
 
 ---
 
+## Funcionalidades implementadas en la fase 2
+
+- Multijugador local para dos jugadores con un teclado compartido.
+- Menú principal, pantalla de carga, ajustes, ayuda, créditos, pausa y fin de partida.
+- Tres escenarios seleccionados aleatoriamente al iniciar cada partida.
+- Cinco tipos de power-ups: velocidad, inmortalidad, eliminación de trazas, congelación y traza aumentada.
+- Sistema de colisiones y marcador de victorias.
+- Cinco pistas musicales, con música diferenciada para el menú, cada escenario y el fin de partida.
+- Ajuste del volumen general y opción de silenciar el audio.
+- Interacción con los menús mediante teclado y ratón.
+
+La opción «JUGAR EN LÍNEA» todavía no dispone de comunicación en red y actualmente inicia una partida local. La API REST se implementará en la fase 3 y la comunicación en tiempo real mediante WebSockets, en la fase 4.
+
+## Ejecución del juego
+
+El juego está desarrollado con Phaser 3 y se ejecuta en un navegador web de escritorio.
+
+1. Clonar o descargar el repositorio.
+2. Abrir la carpeta que contiene el archivo HTML del juego mediante un servidor web local, por ejemplo, Live Server de Visual Studio Code.
+3. Acceder al juego desde el navegador y seleccionar «JUGAR LOCAL» en el menú principal.
+
+## Controles
+
+| Acción | Jugador 1 | Jugador 2 |
+| :--- | :--- | :--- |
+| Izquierda | A | ← |
+| Derecha | D | → |
+| Arriba | W | ↑ |
+| Abajo | S | ↓ |
+| Pausar / reanudar | Q | P |
+
+Los objetos especiales se activan automáticamente al recogerlos.
+
+---
+
 ## Fases del proyecto
 
 | Fase | Contenido | Estado |
 | :--- | :--- | :--- |
 | Fase 1 | Equipo, temática y GDD | ✅ Entregada ([tag fase-1](https://github.com/MRTN0624/Neon-Racers/tree/fase-1)) |
-| Fase 2 | Juego en local | ⏳ Pendiente |
+| Fase 2 | Juego en local | ✅ Implementada |
 | Fase 3 | API REST | ⏳ Pendiente |
 | Fase 4 | WebSockets | ⏳ Pendiente |
