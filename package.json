@@ -4,10 +4,11 @@
   },
   "name": "neon-racers",
   "version": "1.0.0",
-  "description": "<p align=\"center\">\r   <img src=\"img/Neon_Racers_Logo_Transparent.png\" alt=\"Logotipo de Neon Racers\" width=\"400\">\r </p>",
-  "main": "index.js",
+  "description": "Neon Racers - Juegos en Red",
+  "main": "src/app.js",
   "devDependencies": {},
   "scripts": {
+    "start": "node src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,8 +17,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "license": "Apache-2.0",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/MRTN0624/Neon-Racers/issues"
   },
