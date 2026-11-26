@@ -422,4 +422,4 @@ function updateScore(scene, player1Win) {
 //     } catch (error) {
 //         console.error('Error al enviar puntuación:', error);
 //     }
-}
+//}
