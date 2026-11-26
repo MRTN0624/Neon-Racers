@@ -31,6 +31,7 @@ const config = {
     PauseMenu,
     Settings,
     Credits,
+    rankings,
     Help
     ] //Unicamente definimos las escenas que tendrá
     //que arrancar el motor de juego y cada escena heredará de Phaser.Scene para tener las propiedades típicas
