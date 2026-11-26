@@ -160,17 +160,29 @@ class MainMenu extends Phaser.Scene {
         switch (this.selectedOption) {
 
             case 0: // JUGAR LOCAL
-                this.scene.start('Core', {
-                    score1: 0,
-                    score2: 0
-                });
+            let p1 = (prompt('Nombre del Jugador 1 (Rojo):') || '').trim() || 'Jugador 1';
+            let p2 = (prompt('Nombre del Jugador 2 (Azul):') || '').trim() || 'Jugador 2';
+
+            this.registry.set('player1Name', p1);
+            this.registry.set('player2Name', p2);
+
+
+                 this.scene.start('Core', {
+                     score1: 0,
+                     score2: 0
+                 });
                 break;
 
             case 1: // JUGAR EN LÍNEA
-                this.scene.start('Core', {
-                    score1: 0,
-                    score2: 0
-                }); //Por implementar !!!
+             p1 = (prompt('Nombre del Jugador 1 (Rojo):') || '').trim() || 'Jugador 1';
+             p2 = (prompt('Nombre del Jugador 2 (Azul):') || '').trim() || 'Jugador 2';
+
+            this.registry.set('player1Name', p1);
+            this.registry.set('player2Name', p2);
+                 this.scene.start('Core', {
+                     score1: 0,
+                     score2: 0
+                 });
                 break;
 
             case 2: // RANKING

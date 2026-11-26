@@ -46,9 +46,22 @@ function showGameOver(scene, player1, player2) {
         });
     };
 
-    const volverAlMenu = () => {
+    const volverAlMenu = async () => {
         if (transitioning) return;
         transitioning = true;
+
+        // Obtenemos los nombres guardados en el registry (o usamos nombres por defecto)
+        const nombreP1 = scene.registry.get('player1Name') || 'Jugador 1';
+        const nombreP2 = scene.registry.get('player2Name') || 'Jugador 2';
+
+        // Enviamos las puntuaciones de ambos jugadores antes de salir al menú
+        if (scene.score1 > 0) {
+            await guardarPuntuacion(nombreP1, scene.score1);
+        }
+        if (scene.score2 > 0) {
+            await guardarPuntuacion(nombreP2, scene.score2);
+        }
+
         fadeOutVictoryMusic(scene, () => scene.scene.start('MainMenu'));
     };
 
@@ -91,7 +104,6 @@ function showGameOver(scene, player1, player2) {
     scene.input.keyboard.once('keydown-ESC', volverAlMenu);
 }
 
-
 // Transición suave para detener la música de victoria
 function fadeOutVictoryMusic(scene, callback) {
 
@@ -110,4 +122,50 @@ function fadeOutVictoryMusic(scene, callback) {
         }
     });
 
+}
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+async function guardarPuntuacion(nombreJugador, puntuacion) {
+    try {
+        // 1. (Opcional) Comprobamos si el jugador ya existe en el servidor
+        const resGet = await fetch('/rankings');
+        const rankings = await resGet.json();
+        const jugadorExistente = rankings.find(r => r.name === nombreJugador);
+
+        if (jugadorExistente) {
+            // Si ya existe, actualizamos con PUT (ej. sumando puntos o guardando el récord)
+            const nuevaPuntuacion = Math.max(jugadorExistente.score, puntuacion); // O: jugadorExistente.score + puntuacion
+
+            const resPut = await fetch(`/rankings/${jugadorExistente.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: nombreJugador,
+                    score: nuevaPuntuacion
+                })
+            });
+
+            if (resPut.ok) {
+                console.log('Puntuación actualizada en el ranking');
+            }
+        } else {
+            // 2. Si no existe (o si siempre quieres crear un registro nuevo), usamos POST
+            const resPost = await fetch('/rankings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: nombreJugador,
+                    score: puntuacion
+                })
+            });
+
+            if (resPost.ok) {
+                const creado = await resPost.json();
+                console.log('Nuevo ranking guardado en:', resPost.headers.get('Location'), creado);
+            }
+        }
+    } catch (error) {
+        console.error('Error al enviar la puntuación al servidor:', error);
+    }
 }
