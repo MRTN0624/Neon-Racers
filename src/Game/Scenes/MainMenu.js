@@ -57,6 +57,7 @@ class MainMenu extends Phaser.Scene {
         const options = [
             'JUGAR LOCAL',
             'JUGAR EN LÍNEA',
+            'RANKING',
             'OPCIONES',
             'AYUDA',
             'CRÉDITOS',
@@ -65,8 +66,8 @@ class MainMenu extends Phaser.Scene {
 
         this.menuOptions = [];
 
-        const startY = height / 2 - 20;
-        const spacing = 50;
+        const startY = height / 2 - 45;
+        const spacing = 45;
 
         options.forEach((option, index) => {
 
@@ -172,19 +173,23 @@ class MainMenu extends Phaser.Scene {
                 }); //Por implementar !!!
                 break;
 
-            case 2: // OPCIONES
+            case 2: // RANKING
+                this.scene.start('RankingScene');
+                break;
+
+            case 3: // OPCIONES
                 this.scene.start('Settings');
                 break;
 
-            case 3: // AYUDA
+            case 4: // AYUDA
                 this.scene.start('Help');
                 break;
 
-            case 4: // CRÉDITOS
+            case 5: // CRÉDITOS
                 this.scene.start('Credits');
                 break;
 
-            case 5: // SALIR
+            case 6: // SALIR
                 window.close();
                 break;
         }
