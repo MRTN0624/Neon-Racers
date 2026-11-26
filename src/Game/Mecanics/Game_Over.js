@@ -64,6 +64,9 @@ function showGameOver(scene, player1, player2) {
 
         fadeOutVictoryMusic(scene, () => scene.scene.start('MainMenu'));
     };
+    //Donde verdaderamente se suman los puntos es en core, podriamos
+    //haberlo gestionado de aqui siendo más sencillo, pero dejarlo en core
+    //permitirá modularidad
 
 
     const btnRestart = scene.add.text(400, 600 - 120, 'VOLVER A JUGAR (ENTER)', {
@@ -129,15 +132,17 @@ function fadeOutVictoryMusic(scene, callback) {
 async function guardarPuntuacion(nombreJugador, puntuacion) {
     try {
         // 1. (Opcional) Comprobamos si el jugador ya existe en el servidor
-        const resGet = await fetch('/rankings');
-        const rankings = await resGet.json();
-        const jugadorExistente = rankings.find(r => r.name === nombreJugador);
+        const response = await fetch('http://localhost:8080/rankings');
+        const rankings = await response.json(); //Guardamos la base de datos de rankings
+        const jugadorExistente = rankings.find(r => r.name === nombreJugador); //Accedemos al jugador
+        //Ya hemos guardado el jugador
 
-        if (jugadorExistente) {
-            // Si ya existe, actualizamos con PUT (ej. sumando puntos o guardando el récord)
-            const nuevaPuntuacion = Math.max(jugadorExistente.score, puntuacion); // O: jugadorExistente.score + puntuacion
+        if (jugadorExistente != null) {
+            // Si ya existe, actualizamos con PUT 
+            const nuevaPuntuacion =  puntuacion; 
 
-            const resPut = await fetch(`/rankings/${jugadorExistente.id}`, {
+            const resPut = await fetch(`http://localhost:8080/rankings/${jugadorExistente.id}`, {
+                //Busca en la lista de rankings el jugador y actualiza
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -149,9 +154,11 @@ async function guardarPuntuacion(nombreJugador, puntuacion) {
             if (resPut.ok) {
                 console.log('Puntuación actualizada en el ranking');
             }
+
+            //Hasta el momento hemos obtenido el jugador y utilizado su id para actualizarlo con put
         } else {
             // 2. Si no existe (o si siempre quieres crear un registro nuevo), usamos POST
-            const resPost = await fetch('/rankings', {
+            const resPost = await fetch('http://localhost:8080/rankings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -169,3 +176,5 @@ async function guardarPuntuacion(nombreJugador, puntuacion) {
         console.error('Error al enviar la puntuación al servidor:', error);
     }
 }
+
+//Al try & catch lo uso para evitar duplicar código de gestión de errores http

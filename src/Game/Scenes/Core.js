@@ -373,52 +373,53 @@ function updateScore(scene, player1Win) {
 
     if (player1Win == true) {
         scene.score1 += 1;
-        guardarPuntuacionRanking(scene.player1Name, scene.score1);
+       // guardarPuntuacionRanking(scene.player1Name, scene.score1);
     }
     else {
         scene.score2 += 1;
-        guardarPuntuacionRanking(scene.player2Name, scene.score2);
+        //guardarPuntuacionRanking(scene.player2Name, scene.score2);
     }
 
     scene.scoreText.setText(scene.score1 + " - " + scene.score2);
 }
 
-async function guardarPuntuacionRanking(nombreJugador, puntuacion) {
-    if (!nombreJugador || puntuacion <= 0) return;
+//Esto sobraria en principio, al gestionarlo desde game Over
+// async function guardarPuntuacionRanking(nombreJugador, puntuacion) {
+//     if (!nombreJugador || puntuacion <= 0) return;
 
-    try {
-        // 1. Pedimos los rankings actuales para ver si el jugador ya existe
-        const response = await fetch('/rankings');
-        const rankings = await response.json();
+//     try {
+//         // 1. Pedimos los rankings actuales para ver si el jugador ya existe
+//         const response = await fetch('http://localhost:8080/rankings');
+//         const rankings = await response.json(); //Tenemos la base de datos
 
-        const jugadorExistente = rankings.find(
-            entry => entry.name.toLowerCase() === nombreJugador.trim().toLowerCase()
-        );
+//         const jugadorExistente = rankings.find(
+//             entry => entry.name.toLowerCase() === nombreJugador.trim().toLowerCase()
+//         ); //El toLowerCase es para que no distinga de diferencias, solo si coinciden nombres
 
-        if (jugadorExistente) {
-            // 2A. Si ya existe y la nueva puntuación es mayor, actualizamos con PUT
-            if (puntuacion > jugadorExistente.score) {
-                await fetch(`/rankings/${jugadorExistente.id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: jugadorExistente.name,
-                        score: puntuacion
-                    })
-                });
-            }
-        } else {
-            // 2B. Si no existe, creamos su entrada con POST
-            await fetch('/rankings', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name: nombreJugador.trim(),
-                    score: puntuacion
-                })
-            });
-        }
-    } catch (error) {
-        console.error('Error al enviar puntuación:', error);
-    }
+//         if (jugadorExistente) {
+//             // 2A. Si ya existe y la nueva puntuación es mayor, actualizamos con PUT
+//             if (puntuacion > jugadorExistente.score) {
+//                 await fetch(`/rankings/${jugadorExistente.id}`, {
+//                     method: 'PUT',
+//                     headers: { 'Content-Type': 'application/json' },
+//                     body: JSON.stringify({
+//                         name: jugadorExistente.name,
+//                         score: puntuacion
+//                     })
+//                 });
+//             }
+//         } else {
+//             // 2B. Si no existe, creamos su entrada con POST
+//             await fetch('/rankings', {
+//                 method: 'POST',
+//                 headers: { 'Content-Type': 'application/json' },
+//                 body: JSON.stringify({
+//                     name: nombreJugador.trim(),
+//                     score: puntuacion
+//                 })
+//             });
+//         }
+//     } catch (error) {
+//         console.error('Error al enviar puntuación:', error);
+//     }
 }
