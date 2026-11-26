@@ -27,7 +27,9 @@ app.post('/rankings', (req,res) =>{
         
     }
     //Te devuelve el recurso creado
-    const message = {id: rankings.length + 1, name, score}
+    const message = {id: rankings.length + 1, name, score,
+        timestamp: new Date().toISOString() //Guardamos la fecha del recurso creado
+    }
     rankings.push(message); //Almacenamos en nuestra base de datos el nuevo ranking
     res.status(201).location(`/rankings/${message.id}`).json(message); //Recurso creado, es un template literal
 });
