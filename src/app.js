@@ -1,8 +1,10 @@
 //ESTE ES NUESTRO SERVIDOR CON NODE.JS
 import express from 'express';
+import { WebSocketServer } from 'ws'; 2
+import { createServer } from 'http';
 
 const app = express();
-
+const server = createServer(app);
 //Parámetros puntuaciones
 const rankings = []; //Base de datos en memoria
 
