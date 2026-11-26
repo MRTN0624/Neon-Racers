@@ -1,12 +1,12 @@
 {
   "dependencies": {
-    "express": "^4.22.3"
+    "express": "^4.22.3",
+    "ws": "^8.23.0"
   },
   "name": "neon-racers",
   "version": "1.0.0",
   "description": "Neon Racers - Juegos en Red",
   "main": "src/app.js",
-  "devDependencies": {},
   "scripts": {
     "start": "node src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
