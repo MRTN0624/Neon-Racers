@@ -174,7 +174,7 @@ class MainMenu extends Phaser.Scene {
                 break;
 
             case 2: // RANKING
-                this.scene.start('RankingScene');
+                this.scene.start('Ranking');
                 break;
 
             case 3: // OPCIONES

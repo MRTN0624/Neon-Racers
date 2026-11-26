@@ -1,6 +1,6 @@
- class rankings extends Phaser.Scene {
+ class Ranking extends Phaser.Scene {
     constructor() {
-        super('rankings');
+        super('Ranking');
     }
 
     async create() {
@@ -64,5 +64,35 @@
             loadingText.setText('No se pudo cargar el ranking');
             loadingText.setColor('#ff4444');
         }
+
+
+        // 8. Instrucción para volver al menú
+        const text = this.add.text(
+            width / 2,
+            height - 40,
+            'PULSA ESC PARA VOLVER',
+            {
+                fontSize: '16px',
+                color: '#00ffff',
+                fontFamily: 'PixelFont',
+            }
+        ).setOrigin(0.5)
+        .setInteractive({ useHandCursor: true });
+
+        // Eventos de ratón para el texto de volver al menú
+        text.on('pointerdown', () => this.scene.start('MainMenu'));
+        text.on('pointerover', () => {
+            text.setColor('#ffffff');
+            text.setScale(1.05);
+        });
+        text.on('pointerout', () => {
+            text.setColor('#00ffff');
+            text.setScale(1);
+        });
+
+        // 9. Configuración del teclado
+        this.input.keyboard.on('keydown-ESC', () => {
+            this.scene.start('MainMenu');
+        });
     }
 }
