@@ -277,8 +277,8 @@ class Core extends Phaser.Scene {
 
 
             if (this.isOnline) {
-                updatePlayer(this.players, delta); //Actualizas tu jugador de forma normal
-                updatePlayer(this.players, delta); //Actualizas la estela del rival
+                updatePlayer(this.players[0], delta); //Actualizas tu jugador de forma normal
+                updatePlayer(this.players[1], delta); //Actualizas la estela del rival
 
                 if (this.socket.readyState === WebSocket.OPEN) {
                     //Es decir si la conexion está abierta
