@@ -3,11 +3,16 @@ class Core extends Phaser.Scene {
     constructor() {
         super('Core');
     }
+//tanto init como create pueden recibir data, una variable que representa
+//un paquete de datos que es enviado al llamar al scene start de esta escena
+//Solo contendrá lo que se haya mandado desde la escena que ha lanzado esta ultima
 
-    // Recuperar las puntuaciones al reiniciar la escena
+
+// Recuperar las puntuaciones al reiniciar la escena
     init(data) {
         this.score1 = data.score1 || 0;
         this.score2 = data.score2 || 0;
+        this.isOnline = data.isOnline;
     }
 
     // Inicialización y pintado inicial de objetos
@@ -55,15 +60,7 @@ class Core extends Phaser.Scene {
 
         // Selección aleatoria del mapa utilizando las claves del objeto maps
         const mapKeys = Object.keys(maps);
-        //Ejemplo de uso de esto
-        // const persona = {
-        //     nombre: 'Juan',
-        //     edad: 25,
-        //     ciudad: 'Madrid'
-        // };
-        //Toma un objeto y te devuelve un array con los nombre de todas sus propiedades
-
-        // const claves = Object.keys(persona);
+         // const claves = Object.keys(persona);
         // console.log(claves); // Output: ['nombre', 'edad', 'ciudad']
 
         const selectedMap = Phaser.Math.RND.pick(mapKeys);
@@ -117,7 +114,7 @@ class Core extends Phaser.Scene {
 
         this.gameOverTriggered = false;  //Ha saltado el game_over?
 
-
+//Marca---------------->
 
 
         // SISTEMA DE PAUSA PARA DOS JUGADORES
@@ -356,7 +353,7 @@ function createPlayer(scene, x, y, key, startDirection, startAngle, controls, tr
     player.trailGraphics = scene.add.graphics();
     player.trailGraphics.setDepth(0);
     player.trail = [];
-    player.trailMaxSize = 350; //Control del poder de traza aumentada
+    player.trailMaxSize = 40; 
     player.trailColor = trailColor;         // Color capa base
     player.trailGlowColor = trailGlowColor; // Color capa brillo
 

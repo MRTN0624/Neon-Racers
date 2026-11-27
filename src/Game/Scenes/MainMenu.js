@@ -157,6 +157,9 @@ class MainMenu extends Phaser.Scene {
     // Ejecutar la opción seleccionada
     executeSelectedOption() {
 
+
+        //Los registery me permiten almacenar un dato global para que pueda ser compartido
+        //Entre escenas sin necesidad de estar pasándolos todo el rato en el cambio de escena
         switch (this.selectedOption) {
 
             case 0: // JUGAR LOCAL
@@ -169,7 +172,8 @@ class MainMenu extends Phaser.Scene {
 
                  this.scene.start('Core', {
                      score1: 0,
-                     score2: 0
+                     score2: 0,
+                     isOnline: false
                  });
                 break;
 
@@ -181,7 +185,8 @@ class MainMenu extends Phaser.Scene {
             this.registry.set('player2Name', p2);
                  this.scene.start('Core', {
                      score1: 0,
-                     score2: 0
+                     score2: 0,
+                      isOnline: true
                  });
                 break;
 
