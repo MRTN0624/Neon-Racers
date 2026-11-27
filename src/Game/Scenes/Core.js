@@ -1,3 +1,6 @@
+
+
+import SocketManager from "../SocketManager.js";
 class Core extends Phaser.Scene {
 
     constructor() {
@@ -111,10 +114,42 @@ class Core extends Phaser.Scene {
             createPlayer(this, 685, 80, 'player2', 'none', 180, controlsPlayer2, 0x000099, 0x3333FF)
 
         ];
+//WEBSOCKETS ----------------------------------->
 
+if(this.online){
+
+this.socket = SocketManager.getInstance(); //Obtenemos el socket / Iniciamos conexion con el servidor
+//Para este punto hemos establecido una conexion tcp cliente servidor 
+//Y hemos hecho un handshake de negociacion sobre http, ya que seguiamos trabajando con un protoclo solicitud-respuesta(http)
+//Ya tenemos websocket.
+
+//Quitamos los controles al jugador 2
+this.players[1].controls = {
+    up: { isDown: false },
+    down: { isDown: false },
+    left: { isDown: false },
+    right: { isDown: false }
+};
+//Al ser en linea ambos usarán los mismos controles (WASD)
+//No queremos que se pueda mover el jugador usando flechas ni el propio teclado de uno de los jugadores
+
+//Funcion que se ejecuta al recibir datos del servidor
+this.socket.onmessage = (event) => { //Event es un objeto que contiene toda la informacion del evento message.
+data = JSON.parse(event.data);
+this.players[1].x = data.x;
+this.players[1].y = data.y;
+this.players[1].direction = data.direction;
+this.players[1].angle = data.angle;
+};
+//No hace falta pintar nada de las escenas, ya que eso no va a cambiar
+}
+
+
+
+
+//---------------------------------------------->
         this.gameOverTriggered = false;  //Ha saltado el game_over?
 
-//Marca---------------->
 
 
         // SISTEMA DE PAUSA PARA DOS JUGADORES
@@ -214,10 +249,27 @@ class Core extends Phaser.Scene {
 
         if (!this.gameOverTriggered) {
 
-            // Recorremos todos los jugadores registrados
+
+            if(this.isOnline){
+                updatePlayer(this.players[0],delta); //Actualizas tu jugador de forma normal
+                updatePlayer(this.players[1],delta); //Actualizas la estela del rival
+
+                if(this.socket.readyState === WebSocket.OPEN){
+                    //Es decir si la conexion está abierta
+                    this.socket.send(JSON.stringify({
+                    x: this.players[0].x,
+                    y: this.players[0].y,
+                    direction: this.players[0].direction,
+                    angle: this.players[0].angle}));
+                }
+
+            }else{
+                // Recorremos todos los jugadores registrados
             this.players.forEach(player => {  //Es una funcion flecha que recorre el array de jugadores y actualiza cada uno de ellos
                 updatePlayer(player, delta);
             });
+            }
+            
 
             // Comprobar colisiones entre motos y estelas
             checkTrailCollisions(this, this.players[0], this.players[1]);
