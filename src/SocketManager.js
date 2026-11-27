@@ -1,6 +1,6 @@
 class SocketManager {
   static connection = null;
-
+  static role = 1; //Rol de jugador.
   static getInstance() {
     if (SocketManager.connection === null) {
       SocketManager.connection = new WebSocket("ws://localhost:8080");
@@ -23,4 +23,4 @@ class SocketManager {
   }
 }
 
-export default SocketManager; // Para poder importar la clase
+

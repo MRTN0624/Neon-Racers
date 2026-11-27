@@ -5,16 +5,16 @@ import { createServer } from 'http';
 
 const app = express();
 const server = createServer(app);
+
+// ==========================================
+// 1. SECCIÓN API REST (EXPRESS)
+// ==========================================
+
 //Parámetros puntuaciones
 const rankings = []; //Base de datos en memoria
 
 app.use(express.json()); // Middleware para leer JSON
 app.use(express.static('src')); // Sirve la carpeta src (juego, imágenes, sonidos...)
-
-app.listen(8080, () => {
-    console.log('Servidor escuchando en http://localhost:8080');
-    console.log('A la espera de conexiones con cliente');
-});
 
 //Funcion a realizar para cargar puntuacion en rankings
 //Por primera vez
@@ -92,4 +92,62 @@ app.delete('/rankings', (req, res) => {
 
     rankings.length = 0; //Arrays dinámicos
     res.status(204).send();
+});
+
+
+// ==========================================
+// 2. SECCIÓN WEBSOCKETS (TIEMPO REAL)
+// ==========================================
+
+// Creamos el servidor WebSocket enganchado al mismo servidor HTTP y en la ruta /playersData
+const wss = new WebSocketServer({ server });
+
+// Guardamos las conexiones de los jugadores activos (máximo 2)
+let players = [null, null];
+
+wss.on('connection', (ws) => {
+    // Buscamos el primer hueco libre (0 para Player 1, 1 para Player 2)
+    let playerIndex = players.indexOf(null);
+
+    if (playerIndex === -1) {
+        console.log('Sala llena, rechazando conexión');
+        ws.close();
+        return;
+    }
+
+    players[playerIndex] = ws;
+    const role = playerIndex + 1; // 1 o 2
+    console.log(`Jugador ${role} conectado al WebSocket`);
+
+    // Le avisamos al cliente de qué jugador es (1 o 2)
+    ws.send(JSON.stringify({
+        type: 'ASSIGN_ROLE',
+        role: role
+    }));
+
+    // Cuando recibimos movimiento de este jugador, se lo reenviamos al rival
+    ws.on('message', (data) => {
+        const opponentIndex = playerIndex === 0 ? 1 : 0;
+        const opponentSocket = players[opponentIndex];
+
+        if (opponentSocket && opponentSocket.readyState === 1) { // 1 = WebSocket.OPEN
+            opponentSocket.send(data.toString());
+        }
+    });
+
+    // Si se desconecta, liberamos su hueco
+    ws.on('close', () => {
+        console.log(`Jugador ${role} desconectado`);
+        players[playerIndex] = null;
+    });
+});
+
+
+// ==========================================
+// 3. ARRANQUE DEL SERVIDOR COMPARTIDO
+// ==========================================
+
+server.listen(8080, () => {
+    console.log('Servidor escuchando en http://localhost:8080');
+    console.log('A la espera de conexiones con cliente');
 });

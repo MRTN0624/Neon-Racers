@@ -41,7 +41,8 @@ function showGameOver(scene, player1, player2) {
         fadeOutVictoryMusic(scene, () => {
             scene.scene.restart({
                 score1: scene.score1,
-                score2: scene.score2
+                score2: scene.score2,
+                isOnline:scene.isOnline
             });
         });
     };

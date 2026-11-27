@@ -1,6 +1,6 @@
 
 
-import SocketManager from "../SocketManager.js";
+
 class Core extends Phaser.Scene {
 
     constructor() {
@@ -116,16 +116,12 @@ class Core extends Phaser.Scene {
         ];
         //WEBSOCKETS ----------------------------------->
 
-        if (this.isOnline) {
+                       if (this.isOnline) {
 
             this.socket = SocketManager.getInstance(); //Obtenemos el socket / Iniciamos conexion con el servidor
             //Para este punto hemos establecido una conexion tcp cliente servidor 
             //Y hemos hecho un handshake de negociacion sobre http, ya que seguiamos trabajando con un protoclo solicitud-respuesta(http)
             //Ya tenemos websocket.
-
-            // Por defecto somos player1 y el rival es player2 hasta que el servidor asigne rol
-            this.myPlayer = this.players;
-            this.enemyPlayer = this.players;
 
             //Controles vacios para el rival
             const dummyControls = {
@@ -135,8 +131,17 @@ class Core extends Phaser.Scene {
                 right: { isDown: false }
             };
 
-            //Quitamos los controles al jugador 2
-            this.players.controls = dummyControls;
+            // Asignamos las motos según el rol guardado (por si venimos de un reinicio de ronda)
+            if (SocketManager.role === 2) {
+                this.myPlayer = this.players.at(1);
+                this.enemyPlayer = this.players.at(0);
+                this.myPlayer.controls = controlsPlayer1; // Jugamos con WASD
+                this.enemyPlayer.controls = dummyControls;
+            } else {
+                this.myPlayer = this.players.at(0);
+                this.enemyPlayer = this.players.at(1);
+                this.enemyPlayer.controls = dummyControls;
+            }
             //Al ser en linea ambos usarán los mismos controles (WASD)
             //No queremos que se pueda mover el jugador usando flechas ni el propio teclado de uno de los jugadores
 
@@ -145,11 +150,15 @@ class Core extends Phaser.Scene {
                 const data = JSON.parse(event.data);
 
                 // Si el servidor nos asigna ser el jugador 2, intercambiamos las motos
-                if (data.type === 'ASSIGN_ROLE' && data.role === 2) {
-                    this.myPlayer = this.players;
-                    this.enemyPlayer = this.players;
-                    this.myPlayer.controls = controlsPlayer1; // Jugamos con WASD
-                    this.enemyPlayer.controls = dummyControls;
+                if (data.type === 'ASSIGN_ROLE') {
+                    SocketManager.role = data.role; // Lo guardamos en el Singleton para las siguientes rondas
+
+                    if (data.role === 2) {
+                        this.myPlayer = this.players.at(1);
+                        this.enemyPlayer = this.players.at(0);
+                        this.myPlayer.controls = controlsPlayer1; // Jugamos con WASD
+                        this.enemyPlayer.controls = dummyControls;
+                    }
                 }
 
                 // Actualizamos la posición del rival
@@ -169,6 +178,7 @@ class Core extends Phaser.Scene {
             };
             //No hace falta pintar nada de las escenas, ya que eso no va a cambiar
         }
+
 
 
 
@@ -215,8 +225,8 @@ class Core extends Phaser.Scene {
         this.input.keyboard.on('keydown-P', pauseGame);
 
         this.physics.add.overlap(  //Asi phaser buscará detectar si hay superposición espacial.
-            this.players, //Primera moto
-            this.players, //Segunda moto
+            this.players.at(0), //Primera moto
+            this.players.at(1), //Segunda moto
             handlePlayerOverlap,
             null,
             this
@@ -298,13 +308,31 @@ class Core extends Phaser.Scene {
                 });
             }
 
+           
+
+
 
 
 
             // Comprobar colisiones entre motos y estelas
-            checkTrailCollisions(this, this.players, this.players);
+           checkTrailCollisions(this, this.players[0], this.players[1]);
             // Comprobar colisiones entre motos y objetos
             //collisionPlayerObject(this, this.players);
+
+            const bounds = this.physics.world.bounds;
+            const p1 = this.players.at(0);
+            const p2 = this.players.at(1);
+
+            if (p1.body.left <= bounds.x + 2 || p1.body.right >= bounds.right - 2 ||
+                p1.body.top <= bounds.y + 2 || p1.body.bottom >= bounds.bottom - 2) {
+                resolveCollision(this, p1, p2, 'player1-wall');
+            }
+
+            if (p2.body.left <= bounds.x + 2 || p2.body.right >= bounds.right - 2 ||
+                p2.body.top <= bounds.y + 2 || p2.body.bottom >= bounds.bottom - 2) {
+                resolveCollision(this, p1, p2, 'player2-wall');
+            }
+
         }
     }
 }

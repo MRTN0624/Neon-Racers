@@ -160,11 +160,14 @@ class MainMenu extends Phaser.Scene {
 
         //Los registery me permiten almacenar un dato global para que pueda ser compartido
         //Entre escenas sin necesidad de estar pasándolos todo el rato en el cambio de escena
+        
+        let p1;
+        let p2;
         switch (this.selectedOption) {
-
+            
             case 0: // JUGAR LOCAL
-            let p1 = (prompt('Nombre del Jugador 1 (Rojo):') || '').trim() || 'Jugador 1';
-            let p2 = (prompt('Nombre del Jugador 2 (Azul):') || '').trim() || 'Jugador 2';
+             p1 = (prompt('Nombre del Jugador 1 (Rojo):') || '').trim() || 'Jugador 1';
+             p2 = (prompt('Nombre del Jugador 2 (Azul):') || '').trim() || 'Jugador 2';
 
             this.registry.set('player1Name', p1);
             this.registry.set('player2Name', p2);
@@ -178,11 +181,11 @@ class MainMenu extends Phaser.Scene {
                 break;
 
             case 1: // JUGAR EN LÍNEA
-             p1 = (prompt('Nombre del Jugador 1 (Rojo):') || '').trim() || 'Jugador 1';
-             p2 = (prompt('Nombre del Jugador 2 (Azul):') || '').trim() || 'Jugador 2';
+            //  p1 = (prompt('Nombre del Jugador 1 (Rojo):') || '').trim() || 'Jugador 1';
+            //  p2 = (prompt('Nombre del Jugador 2 (Azul):') || '').trim() || 'Jugador 2';
 
-            this.registry.set('player1Name', p1);
-            this.registry.set('player2Name', p2);
+            // this.registry.set('player1Name', p1);
+            // this.registry.set('player2Name', p2);
                  this.scene.start('Core', {
                      score1: 0,
                      score2: 0,
