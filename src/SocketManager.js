@@ -3,7 +3,7 @@ class SocketManager {
 
   static getInstance() {
     if (SocketManager.connection === null) {
-      SocketManager.connection = new WebSocket("ws://localhost:8080/playersData");
+      SocketManager.connection = new WebSocket("ws://localhost:8080");
 
 
       //Deben de estar dentro, porque aunque sea eventListeners, javascript es imperativo y estructurado 
