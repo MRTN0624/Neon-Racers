@@ -6,12 +6,12 @@ class Core extends Phaser.Scene {
     constructor() {
         super('Core');
     }
-//tanto init como create pueden recibir data, una variable que representa
-//un paquete de datos que es enviado al llamar al scene start de esta escena
-//Solo contendrá lo que se haya mandado desde la escena que ha lanzado esta ultima
+    //tanto init como create pueden recibir data, una variable que representa
+    //un paquete de datos que es enviado al llamar al scene start de esta escena
+    //Solo contendrá lo que se haya mandado desde la escena que ha lanzado esta ultima
 
 
-// Recuperar las puntuaciones al reiniciar la escena
+    // Recuperar las puntuaciones al reiniciar la escena
     init(data) {
         this.score1 = data.score1 || 0;
         this.score2 = data.score2 || 0;
@@ -63,7 +63,7 @@ class Core extends Phaser.Scene {
 
         // Selección aleatoria del mapa utilizando las claves del objeto maps
         const mapKeys = Object.keys(maps);
-         // const claves = Object.keys(persona);
+        // const claves = Object.keys(persona);
         // console.log(claves); // Output: ['nombre', 'edad', 'ciudad']
 
         const selectedMap = Phaser.Math.RND.pick(mapKeys);
@@ -114,40 +114,66 @@ class Core extends Phaser.Scene {
             createPlayer(this, 685, 80, 'player2', 'none', 180, controlsPlayer2, 0x000099, 0x3333FF)
 
         ];
-//WEBSOCKETS ----------------------------------->
+        //WEBSOCKETS ----------------------------------->
 
-if(this.online){
+        if (this.isOnline) {
 
-this.socket = SocketManager.getInstance(); //Obtenemos el socket / Iniciamos conexion con el servidor
-//Para este punto hemos establecido una conexion tcp cliente servidor 
-//Y hemos hecho un handshake de negociacion sobre http, ya que seguiamos trabajando con un protoclo solicitud-respuesta(http)
-//Ya tenemos websocket.
+            this.socket = SocketManager.getInstance(); //Obtenemos el socket / Iniciamos conexion con el servidor
+            //Para este punto hemos establecido una conexion tcp cliente servidor 
+            //Y hemos hecho un handshake de negociacion sobre http, ya que seguiamos trabajando con un protoclo solicitud-respuesta(http)
+            //Ya tenemos websocket.
 
-//Quitamos los controles al jugador 2
-this.players[1].controls = {
-    up: { isDown: false },
-    down: { isDown: false },
-    left: { isDown: false },
-    right: { isDown: false }
-};
-//Al ser en linea ambos usarán los mismos controles (WASD)
-//No queremos que se pueda mover el jugador usando flechas ni el propio teclado de uno de los jugadores
+            // Por defecto somos player1 y el rival es player2 hasta que el servidor asigne rol
+            this.myPlayer = this.players;
+            this.enemyPlayer = this.players;
 
-//Funcion que se ejecuta al recibir datos del servidor
-this.socket.onmessage = (event) => { //Event es un objeto que contiene toda la informacion del evento message.
-data = JSON.parse(event.data);
-this.players[1].x = data.x;
-this.players[1].y = data.y;
-this.players[1].direction = data.direction;
-this.players[1].angle = data.angle;
-};
-//No hace falta pintar nada de las escenas, ya que eso no va a cambiar
-}
+            //Controles vacios para el rival
+            const dummyControls = {
+                up: { isDown: false },
+                down: { isDown: false },
+                left: { isDown: false },
+                right: { isDown: false }
+            };
+
+            //Quitamos los controles al jugador 2
+            this.players.controls = dummyControls;
+            //Al ser en linea ambos usarán los mismos controles (WASD)
+            //No queremos que se pueda mover el jugador usando flechas ni el propio teclado de uno de los jugadores
+
+            //Funcion que se ejecuta al recibir datos del servidor
+            this.socket.onmessage = (event) => { //Event es un objeto que contiene toda la informacion del evento message.
+                const data = JSON.parse(event.data);
+
+                // Si el servidor nos asigna ser el jugador 2, intercambiamos las motos
+                if (data.type === 'ASSIGN_ROLE' && data.role === 2) {
+                    this.myPlayer = this.players;
+                    this.enemyPlayer = this.players;
+                    this.myPlayer.controls = controlsPlayer1; // Jugamos con WASD
+                    this.enemyPlayer.controls = dummyControls;
+                }
+
+                // Actualizamos la posición del rival
+                if (data.type === 'MOVE') {
+                    this.enemyPlayer.x = data.x;
+                    this.enemyPlayer.y = data.y;
+                    this.enemyPlayer.direction = data.direction;
+                    this.enemyPlayer.angle = data.angle;
+
+                    // Ajustamos la hitbox del rival al girar
+                    if (data.direction === 'left' || data.direction === 'right') {
+                        this.enemyPlayer.body.setSize(1200, 400, true);
+                    } else if (data.direction === 'up' || data.direction === 'down') {
+                        this.enemyPlayer.body.setSize(400, 1200, true);
+                    }
+                }
+            };
+            //No hace falta pintar nada de las escenas, ya que eso no va a cambiar
+        }
 
 
 
 
-//---------------------------------------------->
+        //---------------------------------------------->
         this.gameOverTriggered = false;  //Ha saltado el game_over?
 
 
@@ -189,8 +215,8 @@ this.players[1].angle = data.angle;
         this.input.keyboard.on('keydown-P', pauseGame);
 
         this.physics.add.overlap(  //Asi phaser buscará detectar si hay superposición espacial.
-            this.players[0], //Primera moto
-            this.players[1], //Segunda moto
+            this.players, //Primera moto
+            this.players, //Segunda moto
             handlePlayerOverlap,
             null,
             this
@@ -209,11 +235,11 @@ this.players[1].angle = data.angle;
         this.physics.world.on('worldbounds', (body) => {
             if (this.gameOverTriggered) return;
 
-            if (body.gameObject === this.players[0]) {
-                resolveCollision(this, this.players[0], this.players[1], 'player1-wall');
+            if (body.gameObject === this.players) {
+                resolveCollision(this, this.players, this.players, 'player1-wall');
             }
-            else if (body.gameObject === this.players[1]) {
-                resolveCollision(this, this.players[0], this.players[1], 'player2-wall');
+            else if (body.gameObject === this.players) {
+                resolveCollision(this, this.players, this.players, 'player2-wall');
             }
         });
 
@@ -250,87 +276,73 @@ this.players[1].angle = data.angle;
         if (!this.gameOverTriggered) {
 
 
-            if(this.isOnline){
-                updatePlayer(this.players[0],delta); //Actualizas tu jugador de forma normal
-                updatePlayer(this.players[1],delta); //Actualizas la estela del rival
+            if (this.isOnline) {
+                updatePlayer(this.players, delta); //Actualizas tu jugador de forma normal
+                updatePlayer(this.players, delta); //Actualizas la estela del rival
 
-                if(this.socket.readyState === WebSocket.OPEN){
+                if (this.socket.readyState === WebSocket.OPEN) {
                     //Es decir si la conexion está abierta
                     this.socket.send(JSON.stringify({
-                    x: this.players[0].x,
-                    y: this.players[0].y,
-                    direction: this.players[0].direction,
-                    angle: this.players[0].angle}));
+                        type: 'MOVE',
+                        x: this.myPlayer.x,
+                        y: this.myPlayer.y,
+                        direction: this.myPlayer.direction,
+                        angle: this.myPlayer.angle
+                    }));
                 }
 
-            }else{
+            } else {
                 // Recorremos todos los jugadores registrados
-            this.players.forEach(player => {  //Es una funcion flecha que recorre el array de jugadores y actualiza cada uno de ellos
-                updatePlayer(player, delta);
-            });
+                this.players.forEach(player => {  //Es una funcion flecha que recorre el array de jugadores y actualiza cada uno de ellos
+                    updatePlayer(player, delta);
+                });
             }
-            
+
+
+
 
             // Comprobar colisiones entre motos y estelas
-            checkTrailCollisions(this, this.players[0], this.players[1]);
-
+            checkTrailCollisions(this, this.players, this.players);
             // Comprobar colisiones entre motos y objetos
             //collisionPlayerObject(this, this.players);
         }
-
     }
-
 }
-
-
 // Actualización de cada jugador
 function updatePlayer(player, delta) {
     const deltaSec = delta / 1000;
-
     // --- 1. LÓGICA DE ESTELA (TRAIL) ---
     if (player.direction != 'none' && player.speed > 0) {
-        //Si el jugador no tiene direccion o no esta congelado 
+        //Si el jugador no tiene direccion o no esta congelado
         const lastPoint = player.trail[player.trail.length - 1];
-
         if (!lastPoint || lastPoint.x !== player.x || lastPoint.y !== player.y) {
             //Comprueba si existe, un punto previo o la moto se ha movido en cualquiera de los ejes.
             player.trail.push({ x: player.x, y: player.y });
         }
-
         if (player.trail.length > player.trailMaxSize) {
             player.trail.shift();
         }
     }
-
-
     player.trailGraphics.clear();
-
     if (player.trail.length > 1) {
-
         // Primera capa: color base
         player.trailGraphics.lineStyle(10, player.trailColor, 0.3);
         player.trailGraphics.beginPath();
         player.trailGraphics.moveTo(player.trail[0].x, player.trail[0].y);
-
         for (let i = 1; i < player.trail.length; i++) {
             player.trailGraphics.lineTo(player.trail[i].x, player.trail[i].y);
         }
-
         player.trailGraphics.strokePath();
-
         // Segunda capa: brillo
         player.trailGraphics.lineStyle(5, player.trailGlowColor, 0.9);
         player.trailGraphics.beginPath();
         player.trailGraphics.moveTo(player.trail[0].x, player.trail[0].y);
-
         for (let i = 1; i < player.trail.length; i++) {
             player.trailGraphics.lineTo(player.trail[i].x, player.trail[i].y);
         }
-
         player.trailGraphics.strokePath();
     }
-
-    // --- 2. ENTRADA DE CONTROLES (DIRECCIÓN) ---       
+    // --- 2. ENTRADA DE CONTROLES (DIRECCIÓN) ---
     if (player.speed > 0) {  //Si el jugador esta congelado no puede hacer nada
         if (player.controls.left.isDown && player.direction != 'right') { //El jugador no puede girar 180º
             player.angle = -90;
@@ -341,7 +353,6 @@ function updatePlayer(player, delta) {
             player.direction = 'right';
             player.body.setSize(1200, 400, true);
         }
-
         if (player.controls.up.isDown && player.direction != 'down') {
             player.angle = 0;
             player.direction = 'up';
@@ -352,7 +363,6 @@ function updatePlayer(player, delta) {
             player.body.setSize(400, 1200, true);
         }
     }
-
     // --- 3. MOVIMIENTO FÍSICO / POSICIÓN ---
     switch (player.direction) {
         case 'up':
@@ -369,86 +379,70 @@ function updatePlayer(player, delta) {
             break;
     }
 }
-
-
 // Reduce progresivamente el volumen de la música hasta detenerla
 function fadeOutMusic(scene) {
-
     scene.tweens.add({
         targets: scene.gameplayMusic,
         volume: 0,
         duration: 1500, // Duración del fade out en milisegundos
         ease: 'Linear',
-
         onComplete: () => {
             scene.gameplayMusic.stop();
         }
     });
 }
-
 function createPlayer(scene, x, y, key, startDirection, startAngle, controls, trailColor, trailGlowColor) {
     //const player = scene.add.image(x, y, key); Sin físicas
     const player = scene.physics.add.image(x, y, key); //Añadir físicas
     player.setScale(0.05);
-    player.body.setSize(400, 1200, true); //Esta exacto para que ocupe la moto no lo cambieis porfa 
+    player.body.setSize(400, 1200, true); //Esta exacto para que ocupe la moto no lo cambieis porfa
     player.direction = startDirection;
     player.angle = startAngle;
     player.setDepth(1);
-
     // Propiedades del jugador
     player.speed = 300;
     player.controls = controls; // Mapeo de controles pasados como objeto
     //player.fullNitro = false; // Control del poder de velocidad
     player.inmortal = false; // Control del poder de inmortalidad
-
     // Estela de movimiento
     player.trailGraphics = scene.add.graphics();
     player.trailGraphics.setDepth(0);
     player.trail = [];
-    player.trailMaxSize = 40; 
+    player.trailMaxSize = 40;
     player.trailColor = trailColor;         // Color capa base
     player.trailGlowColor = trailGlowColor; // Color capa brillo
-
     //Físicas
     player.setCollideWorldBounds(true); //Por defecto toma los bordes del canvas
     player.body.onWorldBounds = true; //Esta linea sirve para avisar de que el jugador a tocado los bordes del mapa
     //Pero nosotros lo hemos definido en create
     player.alive = true; //Para Collision
-
     return player;
 }
-
 function updateScore(scene, player1Win) {
-
     if (player1Win == true) {
         scene.score1 += 1;
-       // guardarPuntuacionRanking(scene.player1Name, scene.score1);
+        // guardarPuntuacionRanking(scene.player1Name, scene.score1);
     }
     else {
         scene.score2 += 1;
         //guardarPuntuacionRanking(scene.player2Name, scene.score2);
     }
-
     scene.scoreText.setText(scene.score1 + " - " + scene.score2);
 }
-
 //Esto sobraria en principio, al gestionarlo desde game Over
 // async function guardarPuntuacionRanking(nombreJugador, puntuacion) {
 //     if (!nombreJugador || puntuacion <= 0) return;
-
 //     try {
 //         // 1. Pedimos los rankings actuales para ver si el jugador ya existe
 //         const response = await fetch('http://localhost:8080/rankings');
 //         const rankings = await response.json(); //Tenemos la base de datos
-
 //         const jugadorExistente = rankings.find(
 //             entry => entry.name.toLowerCase() === nombreJugador.trim().toLowerCase()
 //         ); //El toLowerCase es para que no distinga de diferencias, solo si coinciden nombres
-
 //         if (jugadorExistente) {
 //             // 2A. Si ya existe y la nueva puntuación es mayor, actualizamos con PUT
 //             if (puntuacion > jugadorExistente.score) {
-//                 await fetch(`/rankings/${jugadorExistente.id}`, {
+//                 await fetch(/rankings/${jugadorExistente.id}, {
 //                     method: 'PUT',
 //                     headers: { 'Content-Type': 'application/json' },
 //                     body: JSON.stringify({
