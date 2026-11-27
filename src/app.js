@@ -1,6 +1,6 @@
 //ESTE ES NUESTRO SERVIDOR CON NODE.JS
 import express from 'express';
-import { WebSocketServer } from 'ws'; 2
+import { WebSocketServer } from 'ws'; 
 import { createServer } from 'http';
 
 const app = express();
