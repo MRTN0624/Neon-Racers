@@ -133,7 +133,7 @@ function fadeOutVictoryMusic(scene, callback) {
 async function guardarPuntuacion(nombreJugador, puntuacion) {
     try {
         // 1. (Opcional) Comprobamos si el jugador ya existe en el servidor
-        const response = await fetch('http://localhost:8080/rankings');
+        const response = await fetch('rankings');
         const rankings = await response.json(); //Guardamos la base de datos de rankings
         const jugadorExistente = rankings.find(r => r.name === nombreJugador); //Accedemos al jugador
         //Ya hemos guardado el jugador
@@ -142,7 +142,7 @@ async function guardarPuntuacion(nombreJugador, puntuacion) {
             // Si ya existe, actualizamos con PUT 
             const nuevaPuntuacion =  puntuacion; 
 
-            const resPut = await fetch(`http://localhost:8080/rankings/${jugadorExistente.id}`, {
+            const resPut = await fetch(`/rankings/${jugadorExistente.id}`, {
                 //Busca en la lista de rankings el jugador y actualiza
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -159,7 +159,7 @@ async function guardarPuntuacion(nombreJugador, puntuacion) {
             //Hasta el momento hemos obtenido el jugador y utilizado su id para actualizarlo con put
         } else {
             // 2. Si no existe (o si siempre quieres crear un registro nuevo), usamos POST
-            const resPost = await fetch('http://localhost:8080/rankings', {
+            const resPost = await fetch('/rankings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

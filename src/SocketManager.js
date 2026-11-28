@@ -3,7 +3,7 @@ class SocketManager {
   static role = 1; //Rol de jugador.
   static getInstance() {
     if (SocketManager.connection === null) {
-      SocketManager.connection = new WebSocket("ws://localhost:8080");
+      SocketManager.connection = new WebSocket(`ws://${window.location.host}`);
 
 
       //Deben de estar dentro, porque aunque sea eventListeners, javascript es imperativo y estructurado 

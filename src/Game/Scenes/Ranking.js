@@ -51,7 +51,7 @@ class Ranking extends Phaser.Scene {
 
         try {
             // 1. Pedimos los datos a tu servidor Node.js (ruta relativa sin /src)
-            const response = await fetch('http://localhost:8080/rankings');
+            const response = await fetch('/rankings');
             if (!response.ok) throw new Error('Error al conectar con el servidor');
 
             const rankings = await response.json(); //Parsear el stringify del res
