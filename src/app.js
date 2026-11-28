@@ -148,6 +148,6 @@ wss.on('connection', (ws) => {
 // ==========================================
 
 server.listen(8080, () => {
-    console.log('Servidor escuchando en http://localhost:8080');
+    console.log('Servidor escuchando en http://localhost:8080/Game/idx.html');
     console.log('A la espera de conexiones con cliente');
 });
