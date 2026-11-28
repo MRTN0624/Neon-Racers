@@ -1,15 +1,21 @@
 class SocketManager {
   static connection = null;
-  static role = 1; //Rol de jugador.
+  static role = 1; // Rol de jugador
+
   static getInstance() {
     if (SocketManager.connection === null) {
       SocketManager.connection = new WebSocket(`ws://${window.location.host}`);
 
-
-      //Deben de estar dentro, porque aunque sea eventListeners, javascript es imperativo y estructurado 
-      //y puede dar un fallo.
       SocketManager.connection.onopen = function () {
         console.log("¡Conectado al servidor!");
+      };
+
+      SocketManager.connection.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        if (data.type === 'ASSIGN_ROLE') {
+          SocketManager.role = data.role;
+          console.log("Rol asignado por el servidor:", data.role);
+        }
       };
 
       SocketManager.connection.onclose = function (event) {
@@ -22,5 +28,3 @@ class SocketManager {
     return SocketManager.connection;
   }
 }
-
-
