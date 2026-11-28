@@ -133,7 +133,7 @@ function fadeOutVictoryMusic(scene, callback) {
 async function guardarPuntuacion(nombreJugador, puntuacion) {
     try {
         // 1. (Opcional) Comprobamos si el jugador ya existe en el servidor
-        const response = await fetch('rankings');
+        const response = await fetch('/rankings');
         const rankings = await response.json(); //Guardamos la base de datos de rankings
         const jugadorExistente = rankings.find(r => r.name === nombreJugador); //Accedemos al jugador
         //Ya hemos guardado el jugador
