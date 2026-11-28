@@ -170,9 +170,9 @@ class Core extends Phaser.Scene {
 
                     // Ajustamos la hitbox del rival al girar
                     if (data.direction === 'left' || data.direction === 'right') {
-                        this.enemyPlayer.body.setSize(1200, 400, true);
+                        this.enemyPlayer.body.setSize(800, 400, true);
                     } else if (data.direction === 'up' || data.direction === 'down') {
-                        this.enemyPlayer.body.setSize(400, 1200, true);
+                        this.enemyPlayer.body.setSize(400, 800, true);
                     }
                 }
             };
@@ -314,22 +314,23 @@ class Core extends Phaser.Scene {
 
 
 
-            // Comprobar colisiones entre motos y estelas
-           checkTrailCollisions(this, this.players[0], this.players[1]);
-            // Comprobar colisiones entre motos y objetos
-            //collisionPlayerObject(this, this.players);
+// Comprobar colisiones entre motos y estelas
+            checkTrailCollisions(this, this.players[0], this.players[1]);
+
+            // Si acaba de saltar Game Over por la estela, cortamos aquí para no mirar bordes de una moto destruida
+            if (this.gameOverTriggered) return;
 
             const bounds = this.physics.world.bounds;
             const p1 = this.players.at(0);
             const p2 = this.players.at(1);
 
-            if (p1.body.left <= bounds.x + 2 || p1.body.right >= bounds.right - 2 ||
-                p1.body.top <= bounds.y + 2 || p1.body.bottom >= bounds.bottom - 2) {
+            if (p1 && p1.body && (p1.body.left <= bounds.x  || p1.body.right >= bounds.right  ||
+                p1.body.top <= bounds.y  || p1.body.bottom >= bounds.bottom )) {
                 resolveCollision(this, p1, p2, 'player1-wall');
             }
 
-            if (p2.body.left <= bounds.x + 2 || p2.body.right >= bounds.right - 2 ||
-                p2.body.top <= bounds.y + 2 || p2.body.bottom >= bounds.bottom - 2) {
+            if (p2 && p2.body && (p2.body.left <= bounds.x  || p2.body.right >= bounds.right  ||
+                p2.body.top <= bounds.y || p2.body.bottom >= bounds.bottom )) {
                 resolveCollision(this, p1, p2, 'player2-wall');
             }
 
@@ -375,20 +376,20 @@ function updatePlayer(player, delta) {
         if (player.controls.left.isDown && player.direction != 'right') { //El jugador no puede girar 180º
             player.angle = -90;
             player.direction = 'left';
-            player.body.setSize(1200, 400, true); //Si se puede cambiar la hitbox si cambias de direccion
+            player.body.setSize(800, 400, true); //Si se puede cambiar la hitbox si cambias de direccion
         } else if (player.controls.right.isDown && player.direction != 'left') {
             player.angle = 90;
             player.direction = 'right';
-            player.body.setSize(1200, 400, true);
+            player.body.setSize(800, 400, true);
         }
         if (player.controls.up.isDown && player.direction != 'down') {
             player.angle = 0;
             player.direction = 'up';
-            player.body.setSize(400, 1200, true);
+            player.body.setSize(400, 800, true);
         } else if (player.controls.down.isDown && player.direction != 'up') {
             player.angle = 180;
             player.direction = 'down';
-            player.body.setSize(400, 1200, true);
+            player.body.setSize(400, 800, true);
         }
     }
     // --- 3. MOVIMIENTO FÍSICO / POSICIÓN ---
@@ -423,7 +424,7 @@ function createPlayer(scene, x, y, key, startDirection, startAngle, controls, tr
     //const player = scene.add.image(x, y, key); Sin físicas
     const player = scene.physics.add.image(x, y, key); //Añadir físicas
     player.setScale(0.05);
-    player.body.setSize(400, 1200, true); //Esta exacto para que ocupe la moto no lo cambieis porfa
+    player.body.setSize(400, 800, true); //Esta exacto para que ocupe la moto no lo cambieis porfa
     player.direction = startDirection;
     player.angle = startAngle;
     player.setDepth(1);

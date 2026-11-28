@@ -1,10 +1,9 @@
-
 // Gestión de colisión entre los dos jugadores
 
 function handlePlayerOverlap(player1, player2) {
     console.log("¡OVERLAP ENTRE JUGADORES!");
 
-    if (this.gameOverTriggered) return; //Se entiende que esta colision ya ha sido resuelta pq el game over fue disparado
+    if (this.gameOverTriggered) return; // Se entiende que esta colision ya ha sido resuelta pq el game over fue disparado
 
     console.log("Entrando en resolveCollision");
 
@@ -13,7 +12,7 @@ function handlePlayerOverlap(player1, player2) {
 
 
 //---------------------------------------------------------------
-//Para las otras 2 opciones (2,3)
+// Para las otras 2 opciones (2,3)
 function checkTrailCollisions(scene, player1, player2) {
 
     // Si la partida ya ha terminado, no comprobamos más colisiones
@@ -42,11 +41,8 @@ function checkPlayerTrailOverlap(player, otherPlayer) {
     // Si todavía no hay suficientes puntos, no podemos comprobar segmentos
     if (trail.length < 2) return false;
 
-    // Radio aproximado de la moto más la mitad del grosor de la estela
-    const radius = Math.max(
-        player.body.width,
-        player.body.height
-    ) / 2 + 4;
+    // Radio ajustado al grosor visual de la moto + mitad de la estela
+    const radius = 13;
 
     // Recorremos los segmentos de la estela
     for (let i = 1; i < trail.length; i++) {
@@ -64,15 +60,15 @@ function checkPlayerTrailOverlap(player, otherPlayer) {
 
 function checkSelfTrailOverlap(player) { 
     
-    if (player.direction == 'none') return false; //Si no se ha movido, no puede chocar con su propia estela
+    if (player.direction == 'none') return false; // Si no se ha movido, no puede chocar con su propia estela
 
     const trail = player.trail;
-    const puntosSeguros = 20; //Para que los puntos que aparecen detras de la propia moto no lo maten
+    const puntosSeguros = 20; // Para que los puntos que aparecen detras de la propia moto no lo maten
 
-    //Si no tiene suficientes puntos, no nos podemos chocar
-    if (trail.length < puntosSeguros ) return false;
+    // Si no tiene suficientes puntos, no nos podemos chocar
+    if (trail.length < puntosSeguros) return false;
     
-    const radius = 12; //Mismo radio que antes
+    const radius = 12; // Mismo radio que antes
 
     // Solo comprobamos los segmentos que están lo suficientemente lejos de la moto
     for (let i = 1; i < trail.length - puntosSeguros; i++) {
@@ -130,10 +126,9 @@ function resolveCollision(scene, player1, player2, collisionType) {
 
         if (player1.inmortal === false && player2.inmortal === false) {
 
-
+            scene.gameOverTriggered = true;
             player1.alive = false;
             player2.alive = false;
-
 
             createExplosion(scene, player1);
             createExplosion(scene, player2);
@@ -145,21 +140,23 @@ function resolveCollision(scene, player1, player2, collisionType) {
         }
 
         else if (player1.inmortal === false && player2.inmortal === true) {
+            scene.gameOverTriggered = true;
             player1.alive = false;
             createExplosion(scene, player1);
             player1.destroy(); // Se destruye la moto 1
 
             console.log("Jugador 2 ha ganado");
-            updateScore(scene,false);
+            updateScore(scene, false);
         }
 
         else if (player1.inmortal === true && player2.inmortal === false) {
+            scene.gameOverTriggered = true;
             player2.alive = false;
             createExplosion(scene, player2);
             player2.destroy(); // Se destruye la moto 2
 
             console.log("Jugador 1 ha ganado");
-            updateScore(scene,true);
+            updateScore(scene, true);
         }
 
         else {
@@ -169,26 +166,28 @@ function resolveCollision(scene, player1, player2, collisionType) {
 
     // 2. Moto 1 contra estela de moto 2 o pared
     // Muere únicamente moto 1
-    else if (collisionType === 'player1-trail2' || collisionType === 'player1-wall' && player1.inmortal === false) {
+    else if ((collisionType === 'player1-trail2' || collisionType === 'player1-wall') && player1.inmortal === false) {
 
+        scene.gameOverTriggered = true;
         player1.alive = false;
         createExplosion(scene, player1);
         player1.destroy(); // Se destruye la moto 1
 
         console.log("Jugador 2 ha ganado");
-        updateScore(scene,false);
+        updateScore(scene, false);
     }
 
-    // 3. Moto 2 contra estela de moto 1
+    // 3. Moto 2 contra estela de moto 1 o pared
     // Muere únicamente moto 2
-    else if (collisionType === 'player2-trail1' || collisionType === 'player2-wall' && player2.inmortal === false) {
+    else if ((collisionType === 'player2-trail1' || collisionType === 'player2-wall') && player2.inmortal === false) {
 
+        scene.gameOverTriggered = true;
         player2.alive = false;
         createExplosion(scene, player2);
         player2.destroy(); // Se destruye la moto 2
 
         console.log("Jugador 1 ha ganado");
-        updateScore(scene,true);
+        updateScore(scene, true);
     }
 
     // Si no reconocemos el tipo de colisión, salimos de la función
@@ -201,12 +200,8 @@ function resolveCollision(scene, player1, player2, collisionType) {
     player1.trailGraphics.destroy();
     player2.trailGraphics.destroy();
 
-    // En cualquier caso, finaliza la partida.
-    // Consultando la propiedad alive podremos determinar el resultado.
-    scene.gameOverTriggered = true;
-
     // Aquí conectaremos el Game Over correspondiente.
-    fadeOutMusic(scene); //Paramos la game music
+    fadeOutMusic(scene); // Paramos la game music
     showGameOver(scene, player1, player2);
 }
 
